@@ -9,6 +9,8 @@ try {
         echo json_encode($reponse);
         exit;
     }
+    // pour charger l'heure courante
+    // $params["date_enregistrement"]=date("Y-m-d H:i:s");
     // recupération de a clé primaire de la table pour la condition de modification
     $query_primary_key="SHOW KEYS FROM $table_name WHERE Key_name = 'PRIMARY'";
     $primary_key= $connexion->query($query_primary_key)->fetch()["Column_name"];

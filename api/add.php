@@ -9,10 +9,14 @@ try {
         echo json_encode($reponse);
         exit;
     }
+    // pour charger l'heure courante
+    // $params["date_enregistrement"]=date("Y-m-d H:i:s");
     $query=dynamicInsert($table_name, $params);
     // $reponse["query"]=$query;
     if ($connexion->exec($query)) {
         $reponse["status"] = true;
+        $params["id"]=$connexion->lastInsertId();
+        $reponse["data"] = $params;
     } else {
         $reponse["status"] = false;
         $reponse["erreur"] = "Erreur d'insertion à la base de ";

@@ -18,5 +18,6 @@ $edit_params =$_POST;
 $get_params=$_GET;
 //mode déploiement ou pas
 $mode_deploiement=false;
-
+//reglage de l'heure
+date_default_timezone_set("UTC");
 ?>
