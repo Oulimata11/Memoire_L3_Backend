@@ -273,7 +273,7 @@ function table_documentation($table_name, $description)
   foreach ($files as $key => $value) {
     if ($value != "." && $value != ".."  && $value != "index.php"  && $value != "config.php") {
       $action = str_replace(".php", "", $value);
-      echo "<li class=\"fs-2\">$action <a href=\"/$table_name/$action\"> --------> voir exemple</a></li>";
+      echo "<li class=\"fs-2\">$action <a href=\"./$action\"> --------> voir exemple</a></li>";
       if ($action == "get") {
         $code = get_exemple($table_name);
         echo <<<HTML
