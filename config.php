@@ -4,9 +4,9 @@ header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-$host="localhost";
-$database_name="Gestion_Cotisation";
-$user="root";
+$host="";
+$database_name="";
+$user="";
 $password="";
 $connexion = new PDO("mysql:host=$host;dbname=$database_name",$user,$password);
 //à commenter en mode production
