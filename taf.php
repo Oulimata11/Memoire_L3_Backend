@@ -51,7 +51,7 @@ try {
                 </p>
                 <?php if (!$non_connecte) : ?>
                     <h1 class="col-12 ">La(es) table(s) de la base de données <span class="text-danger"><?= $database_name ?></span>
-                        <a href="./generate.php?tout=oui" class="px-2 right"><button class="btn btn-warning">Tout générer</button></a>
+                        <!-- <a href="./generate.php?tout=oui" class="px-2 right"><button class="btn btn-warning">Tout générer</button></a> -->
                     </h1>
                     <p class="col-12 fs-4 mt-2">
                     <ol class="list-group" id="mes_tables">
