@@ -30,6 +30,11 @@ try {
             max-height: 750px;
             font-size: 14px;
         }
+        #add_form_ts{
+            height: 500px;
+            max-height: 750px;
+            font-size: 14px;
+        }
 
         #json_add,
         #json_edit,
@@ -111,7 +116,8 @@ try {
         editor_add = ace.edit('add_exemple', configJs),
         editor_edit = ace.edit('edit_exemple', configJs),
         editor_delete = ace.edit('delete_exemple', configJs),
-        editor_form = ace.edit('add_form', configHtml);
+        editor_form = ace.edit('add_form', configHtml),
+        editor_form_ts = ace.edit('add_form_ts', configJs);
 
     var json_add = ace.edit('json_add', configJson),
         json_edit = ace.edit('json_edit', configJson),

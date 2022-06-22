@@ -166,6 +166,61 @@ function add_form($table_name,$description){
   </div>
   ';
 }
+
+function add_form_ts($table_name, $description)
+{
+  $keysValues = array();
+  foreach ($description as $key => $value) {
+    if ($value["Key"] == "PRI") { //cle primaire
+      // rien avec la cle primaire
+    } else {
+      $cle = $value["Field"];
+      $type = 'text';
+
+      $keysValues[] = '
+      ' . $cle . ': ["", Validators.required]';
+    }
+  }
+  $content = implode(",", $keysValues);
+  return '
+  <div class="row position-relative my-5">
+    <div id="add_form_ts" class="col-12">
+      reactiveForm_add_' . $table_name . '!: FormGroup;
+      submitted:boolean=false
+      loading_add_' . $table_name . ':boolean=false
+      constructor(private formBuilder: FormBuilder,public api:ApiService, private http:HttpClient) { }
+
+      ngOnInit(): void {
+        this.init_form()
+      }
+      init_form() {
+          this.reactiveForm_add_' . $table_name . ' = this.formBuilder.group({
+            ' . $content . '
+          });
+      }
+  
+      // acces facile au champs de votre formulaire
+      get f(): any { return this.reactiveForm_add_' . $table_name . '.controls; }
+      // validation du formulaire
+      onSubmit_add_' . $table_name . '() {
+        this.submitted = true;
+        console.log(this.reactiveForm_add_' . $table_name . '.value)
+        // stop here if form is invalid
+        if (this.reactiveForm_add_' . $table_name . '.invalid) {
+          return;
+        }
+        var ' . $table_name . '=this.reactiveForm_add_' . $table_name . '.value
+        this.add_' . $table_name . '(' . $table_name . ')
+      }
+      // vider le formulaire
+      onReset_add_' . $table_name . '() {
+        this.submitted = false;
+        this.reactiveForm_add_' . $table_name . '.reset();
+      }
+      </div>
+    </div>
+  ';
+}
 function getParamsForEdit($description){
   $keysValues = array();
   foreach ($description as $key => $value) {
@@ -289,6 +344,7 @@ HTML;
         $data = getParamsForAdd($description);
         $code = add_exemple($table_name);
         $add_form_code=add_form($table_name,$description);
+        $add_form_ts_code = add_form_ts($table_name, $description);
         echo <<<HTML
           <div class="row my-5">
             <p class="col-12 text-justify fs-4">
@@ -307,6 +363,8 @@ HTML;
               Vous n'avez qu'à faire nous faire confiance en copiant le code ci-dessous et le mettre au bon endroit dans votre projet et le tour est joué.
             </p>
             $add_form_code
+            <h6>TS</h6>
+            $add_form_ts_code
           </div>
 HTML;
       } else if ($action == "edit") {
