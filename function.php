@@ -146,8 +146,8 @@ function add_form($table_name,$description){
       &lt;div class="form-group"&gt;
         &lt;label >'.$cle.'&lt;/label&gt;
         &lt;input class="form-control" type="'.$type.'"  formControlName="'.$cle.'" class="form-control" [ngClass]="{ \'is-invalid\': submitted && f.'.$cle.'.errors }"/&gt;
-        &lt;div *ngIf="submitted && f.firstName.errors" class="invalid-feedback"&gt;
-            &lt;div *ngIf="f.firstName.errors.required"&gt; '.$cle.' est obligatoire &lt;/div&gt;
+        &lt;div *ngIf="submitted && f.'.$cle.'.errors" class="invalid-feedback"&gt;
+            &lt;div *ngIf="f.'.$cle.'.errors.required"&gt; '.$cle.' est obligatoire &lt;/div&gt;
         &lt;/div&gt;
       &lt;/div&gt;';
     }
@@ -160,7 +160,7 @@ function add_form($table_name,$description){
         '.$content.'
       &lt;/form&gt;
       &lt;!-- vous pouvez valider votre formulaire n\'importe ou --&gt;
-      &lt;button type="button" class="btn btn-primary" (click)="form_add_'.$table_name.'.ngSubmit.emit()"&gt;Valider&lt;/button&gt;
+      &lt;button type="button" class="btn btn-primary" [disabled]="loading_add_'.$table_name.'" (click)="form_add_'.$table_name.'.ngSubmit.emit()"&gt;{{loading_add_'.$table_name.'?"En cours ...":"Valider"}}&lt;/button&gt;
       &lt;button class="btn btn-secondary" type="reset" (click)="onReset_add_'.$table_name.'()"&gt;Vider&lt;/button&gt;
     </div>
   </div>
