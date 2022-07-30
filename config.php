@@ -5,9 +5,9 @@ header('Access-Control-Allow-Credentials: true');
 header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
 header("Access-Control-Allow-Headers: Content-Type");
 
-$host="";
-$database_name="";
-$user="";
+$host="localhost";
+$database_name="new_e_tax";
+$user="root";
 $password="";
 $connexion = new PDO("mysql:host=$host;dbname=$database_name",$user,$password);
 //à commenter en mode production

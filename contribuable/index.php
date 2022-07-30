@@ -24,28 +24,17 @@ try {
         #add_exemple,
         #edit_exemple,
         #delete_exemple,
-        #add_form {
-            height: 500px;
-            max-height: 750px;
-            font-size: 14px;
-        }
-
-        #add_form_ts {
-            height: 500px;
-            max-height: 750px;
+        #add_form ,
+        #add_form_ts{
+            height: 400px;
             font-size: 14px;
         }
 
         #json_add,
         #json_edit,
         #json_delete {
-            height: 300px;
-            max-height: 500px;
-            font-size: 14px;
-        }
-
-        #json_delete {
             height: 200px;
+            font-size: 14px;
         }
     </style>
 </head>

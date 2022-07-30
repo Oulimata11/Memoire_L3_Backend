@@ -9,9 +9,6 @@ try {
     json_encode($tables);
     $non_connecte = false;
 } catch (\Throwable $th) {
-    // echo "<h1>veillez éditer le fichier de configuration (config.php), renseigner la bonne base de donnée et un utilisateur</h1>";
-    // echo "<h1>" . $th->getMessage() . "</h1>";
-    // exit;
     $non_connecte = true;
 }
 ?>
@@ -23,7 +20,7 @@ try {
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1.0">
         <title>TAF</title>
-        <link href="./bootstrap.min.css" rel="stylesheet" >
+        <link href="./taf_assets/bootstrap.min.css" rel="stylesheet" >
         <style>
             #editor{
                 height: 300px;
@@ -103,7 +100,7 @@ try {
             </div>
         </main>
     </body>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.4.13/ace.js" type="text/javascript" charset="utf-8"></script>
+    <script src="./taf_assets/ace.js" type="text/javascript" charset="utf-8"></script>
     <script>
         var config = {
             theme: "ace/theme/monokai",
