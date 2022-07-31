@@ -1,7 +1,11 @@
 <?php
+
+use Taf\TableQuery;
 try {
     require './config.php';
-    $params=$add_params;
+    require '../TableQuery.php';
+    $table_query=new TableQuery($table_name);
+    $params=$_POST;
     
     if(count($params)==0){
         $reponse["status"] = false;
@@ -11,11 +15,11 @@ try {
     }
     // pour charger l'heure courante
     // $params["date_enregistrement"]=date("Y-m-d H:i:s");
-    $query=dynamicInsert($table_name, $params);
+    $query=$table_query->dynamicInsert($params);
     // $reponse["query"]=$query;
-    if ($connexion->exec($query)) {
+    if ($taf_config->get_db()->exec($query)) {
         $reponse["status"] = true;
-        $params["id"]=$connexion->lastInsertId();
+        $params["id"]=$taf_config->get_db()->lastInsertId();
         $reponse["data"] = $params;
     } else {
         $reponse["status"] = false;

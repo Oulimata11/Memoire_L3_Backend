@@ -2,9 +2,7 @@
 try {
     require './config.php';
     require '../TableDocumentation.php';
-
-    $query = "desc $table_name";
-    $description = $connexion->query($query)->fetchAll(PDO::FETCH_ASSOC);
+    $table_documentation = new \Taf\TableDocumentation($table_name);
 } catch (\Throwable $th) {
     echo "<h1>" . $th->getMessage() . "</h1>";
 }
@@ -24,23 +22,16 @@ try {
         #add_exemple,
         #edit_exemple,
         #delete_exemple,
-        #add_form {
-            height: 500px;
-            max-height: 750px;
-            font-size: 14px;
-        }
-
+        #add_form ,
         #add_form_ts {
-            height: 500px;
-            max-height: 750px;
+            height: 400px;
             font-size: 14px;
         }
 
         #json_add,
         #json_edit,
         #json_delete {
-            height: 300px;
-            max-height: 500px;
+            height: 250px;
             font-size: 14px;
         }
 
@@ -62,33 +53,29 @@ try {
     <main class="container mt-5">
         <div class="row">
             <p class="col-12 fs-3 text-justify">
-            <h1>Description de la table <span class="text-danger"><?= $table_name ?></span></h1>
+            <h1>Description de la table <span class="text-danger"><?= $table_documentation->table_name ?></span></h1>
             <ol>
                 <?php
-                try {
-                    foreach ($description as $key => $value) {
-                        echo "<li class=\"fs-4\">" . $value["Field"] . "</li>";
+                    try {
+                        foreach ($table_documentation->description as $key => $value) {
+                            echo "<li class=\"\">" . $value["Field"] . "</li>";
+                        }
+                    } catch (\Throwable $th) {
+                        $reponse["status"] = false;
+                        $reponse["erreur"] = $th->getMessage();
+                        echo "<li>" . $th->getMessage() . "</li>";
                     }
-                } catch (\Throwable $th) {
-                    $reponse["status"] = false;
-                    $reponse["erreur"] = $th->getMessage();
-
-                    echo "<li>" . $th->getMessage() . "</li>";
-                }
-
                 ?>
             </ol>
             </p>
-            <h1>Action(s) possible(s) dans la table <span class="text-danger"><?= $table_name ?></span></h1>
+            <h1>Action(s) possible(s) dans la table <span class="text-danger"><?= $table_documentation->table_name ?></span></h1>
             <?php
-
-            $table_documentation = new TableDocumentation($table_name);
             $dir    = './';
             $files = scandir($dir);
             foreach ($files as $key => $value) {
                 if ($value != "." && $value != ".."  && $value != "index.php"  && $value != "config.php") {
                     $action = str_replace(".php", "", $value);
-                    echo "<li class=\"fs-2\">$action <a href=\"./$action\"> --------> voir exemple</a></li>";
+                    
                     if ($action == "get") {
                         echo $table_documentation->get();
                     } else if ($action == "add") {
@@ -104,6 +91,7 @@ try {
     </main>
 </body>
 <script src="../taf_assets/ace.js" type="text/javascript" charset="utf-8"></script>
+<script src="../taf_assets/bootstrap.bundle.min.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var globConfig = {
         selectionStyle: "text",

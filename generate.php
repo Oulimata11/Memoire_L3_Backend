@@ -1,7 +1,6 @@
 <?php
 echo "<h1><a href='./taf'>Accueil</a></h1>";
 try {
-    require './config.php';
     if(!isset($_GET["table"]) && !isset($_GET["tout"])){
         echo "<h1>Paramètre(s) requi(s)</h1>";
         exit;
@@ -31,7 +30,7 @@ try {
         header('location:./taf#table_'.$table_name);
     }elseif(isset($_GET["tout"])){
         $query = "SHOW TABLES";
-        $tables = $connexion->query($query)->fetchAll(PDO::FETCH_ASSOC);
+        $tables = $TableDocumentation::get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
         foreach ($tables as $key => $value) {
             $table_name = $value["Tables_in_" . $database_name];
             generate($table_name);

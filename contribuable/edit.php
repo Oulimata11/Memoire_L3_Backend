@@ -1,7 +1,11 @@
 <?php
+use Taf\TableQuery;
 try {
     require './config.php';
-    $params=$edit_params;
+    require '../TableQuery.php';
+    $table_query=new TableQuery($table_name);
+    $params=$_POST;
+
 
     if(count($params)==0){
         $reponse["status"] = false;
@@ -13,17 +17,17 @@ try {
     // $params["date_enregistrement"]=date("Y-m-d H:i:s");
     // recupération de a clé primaire de la table pour la condition de modification
     $query_primary_key="SHOW KEYS FROM $table_name WHERE Key_name = 'PRIMARY'";
-    $primary_key= $connexion->query($query_primary_key)->fetch()["Column_name"];
+    $primary_key= $taf_config->get_db()->query($query_primary_key)->fetch()["Column_name"];
     $condition="where $primary_key=".$params[$primary_key];
     // execution de la requete de modification
-    $query=dynamicUpdate($table_name, $params,$condition);
+    $query=$table_query->dynamicUpdate($params,$condition);
     //$reponse["query"]=$query;
-    $resultat=$connexion->exec($query);
+    $resultat=$taf_config->get_db()->exec($query);
     if ($resultat) {
         $reponse["status"] = true;
     } else {
         $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur $resultat";
+        $reponse["erreur"] = "Erreur! ou pas de moification";
     }
     echo json_encode($reponse);
 } catch (\Throwable $th) {
