@@ -11,10 +11,12 @@ class TafConfig
     public static $connected=null;
     public $tables = [];
 
-    public $host = "localhost";
-    public $database_name = "new_e_tax";
-    public $user = "root";
-    public $password = "";
+    public $database_type="pgsql";//mysql
+    public $host = "74.207.224.128";
+    public $port = "5432";
+    public $database_name = "etax";
+    public $user = "etax";
+    public $password = "~%tx12022#@";
 
 
     public function __construct()
@@ -25,30 +27,34 @@ class TafConfig
     public function init_data()
     {
         if ($this->tables == [] && $this->is_connected()) {
-            $this->tables = $this->get_db()->query("SHOW TABLES")->fetchAll(PDO::FETCH_ASSOC);
+            switch ($this->database_type) {
+                case 'pgsql':
+                    $this->tables = $this->get_db()->query("SELECT tablename FROM pg_catalog.pg_tables WHERE schemaname != 'pg_catalog' AND schemaname != 'information_schema'")->fetchAll(PDO::FETCH_COLUMN);
+                    break;
+                case 'mysql':
+                    $this->tables = $this->get_db()->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
+                    break;
+                
+                default:
+                    // type de base de données inconnu
+                    break;
+            }            
         }
     }
     public function is_connected(){
-        if(self::$connected==null){
-            try {
-                static::$db_instance = new PDO("mysql:host={$this->host};dbname={$this->database_name}", $this->user, $this->password);
-                self::$connected= true;
-            } catch (\Throwable $th) {
-                self::$connected= false;
-            }
-        }
+        $this->get_db();
         return self::$connected;
     }
     public function get_db()
     {
         if (static::$db_instance == null) {
             try {
-                static::$db_instance = new PDO("mysql:host={$this->host};dbname={$this->database_name}", $this->user, $this->password);
+                static::$db_instance = new PDO("{$this->database_type}:host={$this->host};port={$this->port};dbname={$this->database_name};", $this->user, $this->password);
                 //à commenter en mode production. Il permet de montrer les erreur explicitement
                 static::$db_instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$connected=true;
             } catch (\Throwable $th) {
-                echo "false";
+                // echo "false";
                 self::$connected=false;
             }
 

@@ -1,6 +1,9 @@
 <?php
+
 namespace Taf;
+
 use PDO;
+
 class TableDocumentation extends TafConfig
 {
     public $url = "";
@@ -10,7 +13,22 @@ class TableDocumentation extends TafConfig
         $this->table_name = $table_name;
         $this->check_mode_deploiement();
         $this->url = $this->get_base_url();
-        $this->description = self::get_db()->query("desc {$this->table_name}")->fetchAll(PDO::FETCH_ASSOC);;
+        $this->init_data();
+    }
+    function init_data()
+    {
+        switch ($this->database_type) {
+            case 'pgsql':
+                $this->description = $this->get_db()->query("select column_name from information_schema.columns where table_name = '{$this->table_name}'")->fetchAll(PDO::FETCH_COLUMN);
+                break;
+            case 'mysql':
+                $this->description = $this->get_db()->query("desc {$this->table_name}")->fetchAll(PDO::FETCH_COLUMN);
+                break;
+
+            default:
+                // type de base de données inconnu
+                break;
+        }
     }
     function check_mode_deploiement()
     {
@@ -86,11 +104,7 @@ class TableDocumentation extends TafConfig
     {
         $keysValues = array();
         foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary key)'";
-            } else {
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . "'";
-            }
+            $keysValues[] = $value;
         }
         $ts_object = implode(",\n\t\t", $keysValues);
         return <<<HTML
@@ -107,13 +121,10 @@ class TableDocumentation extends TafConfig
     {
         $keysValues = array();
         foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                // rien avec la cle primaire
-            } else {
-                $cle = $value["Field"];
-                $type = 'text';
+            $cle = $value;
+            $type = 'text';
 
-                $keysValues[] = '
+            $keysValues[] = '
             &lt;!-- ' . $cle . ' field avec un control de validite --&gt;
             &lt;div class="form-group"&gt;
               &lt;label >' . $cle . '&lt;/label&gt;
@@ -122,7 +133,6 @@ class TableDocumentation extends TafConfig
                   &lt;div *ngIf="f.' . $cle . '.errors.required"&gt; ' . $cle . ' est obligatoire &lt;/div&gt;
               &lt;/div&gt;
             &lt;/div&gt;';
-            }
         }
         $content = implode("\t\t", $keysValues);
         return <<<HTML
@@ -143,15 +153,11 @@ class TableDocumentation extends TafConfig
     {
         $keysValues = array();
         foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                // rien avec la cle primaire
-            } else {
-                $cle = $value["Field"];
-                $type = 'text';
+            $cle = $value;
+            $type = 'text';
 
-                $keysValues[] = '
+            $keysValues[] = '
             ' . $cle . ': ["", Validators.required]';
-            }
         }
         $content = implode(",", $keysValues);
         return <<<HTML
@@ -264,19 +270,7 @@ class TableDocumentation extends TafConfig
 
     function getParamsForEdit()
     {
-        $keysValues = array();
-        foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary key, obligatoire)'";
-            } else if ($value["Key"] == "MUL") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary étrangère, obligatoire)'";
-            } else if ($value["Null"] == "NO") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (obligatoire)'";
-            } else {
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (facultatif)'";
-            }
-        }
-        $ts_object = implode(",\n\t\t", $keysValues);
+        $ts_object = implode(",\n\t\t", $this->description );
         return <<<HTML
                 <div id="json_edit" class="col-12">
                 {
@@ -345,11 +339,7 @@ class TableDocumentation extends TafConfig
     function getParamsForDelete()
     {
         $keysValues = array();
-        foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary key, obligatoire)'";
-            }
-        }
+        $keysValues[] = "id_......:' ...... (primary key, obligatoire)'";
         $ts_object = implode(",\n\t\t", $keysValues);
         return <<<HTML
         <div id="json_delete" class="col-12">
