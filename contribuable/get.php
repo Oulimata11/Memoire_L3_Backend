@@ -18,7 +18,7 @@ try {
     
     $table_query=new TableQuery($table_name);
 
-    $condition=$table_query->dynamicCondition($params,"like");
+    $condition=$table_query->dynamicCondition($params,"=");
     // $reponse["condition"]=$condition;
     $query="select *from $table_name ".$condition;
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
