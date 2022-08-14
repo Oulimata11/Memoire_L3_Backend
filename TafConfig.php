@@ -12,7 +12,7 @@ class TafConfig
     public $tables = [];
 
     public $host = "localhost";
-    public $database_name = "new_e_tax";
+    public $database_name = "e-tax";
     public $user = "root";
     public $password = "";
 
