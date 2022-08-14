@@ -73,9 +73,7 @@
                     <?php
                     $dir    = './';
                     $files = scandir($dir);
-                    foreach ($taf_config->tables as $key => $value) {
-                        $mysql_suffixe="Tables_in_";
-                        $table_name = $value[$mysql_suffixe . strtolower($taf_config->database_name)];
+                    foreach ($taf_config->tables as $key => $table_name) {
                         if (array_search($table_name, $files)) { // table dèja générée
                             echo "<li id='table_$table_name' class='list-group-item fs-3  d-flex justify-content-between align-items-center bg-light'><span>" . $table_name . "</span><a class='px-2 right' href='./$table_name'><button class='btn btn-primary'> --------> voir exemple </button></a></li>";
                         } else {// table non encore générée

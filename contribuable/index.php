@@ -58,11 +58,9 @@ try {
                 <?php
                     try {
                         foreach ($table_documentation->description as $key => $value) {
-                            echo "<li class=\"\">" . $value["Field"] . "</li>";
+                            echo "<li class=\"\">" . $value. "</li>";
                         }
                     } catch (\Throwable $th) {
-                        $reponse["status"] = false;
-                        $reponse["erreur"] = $th->getMessage();
                         echo "<li>" . $th->getMessage() . "</li>";
                     }
                 ?>

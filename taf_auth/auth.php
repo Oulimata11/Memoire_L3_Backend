@@ -9,6 +9,7 @@ try {
     require './TafAuth.php';
     $taf_auth = new TafAuth();
     $taf_config = new TafConfig();
+    $taf_config->allow_cors();
 
     $params=$_POST;
     // var_dump($params);

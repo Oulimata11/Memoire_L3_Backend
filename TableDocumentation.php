@@ -1,6 +1,9 @@
 <?php
+
 namespace Taf;
+
 use PDO;
+
 class TableDocumentation extends TafConfig
 {
     public $url = "";
@@ -10,7 +13,22 @@ class TableDocumentation extends TafConfig
         $this->table_name = $table_name;
         $this->check_mode_deploiement();
         $this->url = $this->get_base_url();
-        $this->description = self::get_db()->query("desc {$this->table_name}")->fetchAll(PDO::FETCH_ASSOC);;
+        $this->init_data();
+    }
+    function init_data()
+    {
+        switch ($this->database_type) {
+            case 'pgsql':
+                $this->description = $this->get_db()->query("select column_name from information_schema.columns where table_name = '{$this->table_name}'")->fetchAll(PDO::FETCH_COLUMN);
+                break;
+            case 'mysql':
+                $this->description = $this->get_db()->query("desc {$this->table_name}")->fetchAll(PDO::FETCH_COLUMN);
+                break;
+
+            default:
+                // type de base de données inconnu
+                break;
+        }
     }
     function check_mode_deploiement()
     {
@@ -86,11 +104,7 @@ class TableDocumentation extends TafConfig
     {
         $keysValues = array();
         foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary key)'";
-            } else {
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . "'";
-            }
+            $keysValues[] = $value;
         }
         $ts_object = implode(",\n\t\t", $keysValues);
         return <<<HTML
@@ -107,29 +121,25 @@ class TableDocumentation extends TafConfig
     {
         $keysValues = array();
         foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                // rien avec la cle primaire
-            } else {
-                $cle = $value["Field"];
-                $type = 'text';
+            $cle = $value;
+            $type = 'text';
 
-                $keysValues[] = '
+            $keysValues[] = '
             &lt;!-- ' . $cle . ' field avec un control de validite --&gt;
-            &lt;div class="form-group"&gt;
+            &lt;div class="form-group col-sm-6"&gt;
               &lt;label >' . $cle . '&lt;/label&gt;
-              &lt;input class="form-control" type="' . $type . '"  formControlName="' . $cle . '" class="form-control" [ngClass]="{ \'is-invalid\': submitted && f.' . $cle . '.errors }"/&gt;
+              &lt;input class="form-control" type="' . $type . '"  formControlName="' . $cle . '"  placeholder="' . $cle . '" class="form-control" [ngClass]="{ \'is-invalid\': submitted && f.' . $cle . '.errors }"/&gt;
               &lt;div *ngIf="submitted && f.' . $cle . '.errors" class="invalid-feedback"&gt;
                   &lt;div *ngIf="f.' . $cle . '.errors.required"&gt; ' . $cle . ' est obligatoire &lt;/div&gt;
               &lt;/div&gt;
             &lt;/div&gt;';
-            }
         }
         $content = implode("\t\t", $keysValues);
         return <<<HTML
         <div class="row position-relative my-5">
           <div id="add_form" class="col-12">
-            &lt;form  [formGroup]="reactiveForm_add_{$this->table_name} " (ngSubmit)="onSubmit_add_{$this->table_name} ()" #form_add_{$this->table_name} ="ngForm" &gt;
-              ' . $content . '
+            &lt;form  [formGroup]="reactiveForm_add_{$this->table_name} " (ngSubmit)="onSubmit_add_{$this->table_name} ()" #form_add_{$this->table_name} ="ngForm" class="row"&gt;
+                $content
             &lt;/form&gt;
             &lt;!-- vous pouvez valider votre formulaire n\'importe ou --&gt;
             &lt;button type="button" class="btn btn-primary" [disabled]="loading_add_{$this->table_name} " (click)="form_add_{$this->table_name} .ngSubmit.emit()"&gt;{{loading_add_{$this->table_name} ?"En cours ...":"Valider"}}&lt;/button&gt;
@@ -143,15 +153,11 @@ class TableDocumentation extends TafConfig
     {
         $keysValues = array();
         foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                // rien avec la cle primaire
-            } else {
-                $cle = $value["Field"];
-                $type = 'text';
+            $cle = $value;
+            $type = 'text';
 
-                $keysValues[] = '
+            $keysValues[] = '
             ' . $cle . ': ["", Validators.required]';
-            }
         }
         $content = implode(",", $keysValues);
         return <<<HTML
@@ -163,11 +169,11 @@ class TableDocumentation extends TafConfig
                         constructor(private formBuilder: FormBuilder,public api:ApiService, private http:HttpClient) { }
                 
                         ngOnInit(): void {
-                        this.init_form()
+                            this.init_form()
                         }
                         init_form() {
                             this.reactiveForm_add_{$this->table_name}  = this.formBuilder.group({
-                            ' . $content . '
+                                $content
                             });
                         }
                     
@@ -175,14 +181,14 @@ class TableDocumentation extends TafConfig
                         get f(): any { return this.reactiveForm_add_{$this->table_name} .controls; }
                         // validation du formulaire
                         onSubmit_add_{$this->table_name} () {
-                        this.submitted = true;
-                        console.log(this.reactiveForm_add_{$this->table_name} .value)
-                        // stop here if form is invalid
-                        if (this.reactiveForm_add_{$this->table_name} .invalid) {
-                            return;
-                        }
-                        var {$this->table_name} =this.reactiveForm_add_{$this->table_name} .value
-                        this.add_{$this->table_name} ({$this->table_name} )
+                            this.submitted = true;
+                            console.log(this.reactiveForm_add_{$this->table_name} .value)
+                            // stop here if form is invalid
+                            if (this.reactiveForm_add_{$this->table_name} .invalid) {
+                                return;
+                            }
+                            var {$this->table_name} =this.reactiveForm_add_{$this->table_name} .value
+                            this.add_{$this->table_name} ({$this->table_name} )
                         }
                         // vider le formulaire
                         onReset_add_{$this->table_name} () {
@@ -264,19 +270,7 @@ class TableDocumentation extends TafConfig
 
     function getParamsForEdit()
     {
-        $keysValues = array();
-        foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary key, obligatoire)'";
-            } else if ($value["Key"] == "MUL") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary étrangère, obligatoire)'";
-            } else if ($value["Null"] == "NO") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (obligatoire)'";
-            } else {
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (facultatif)'";
-            }
-        }
-        $ts_object = implode(",\n\t\t", $keysValues);
+        $ts_object = implode(",\n\t\t", $this->description );
         return <<<HTML
                 <div id="json_edit" class="col-12">
                 {
@@ -345,11 +339,7 @@ class TableDocumentation extends TafConfig
     function getParamsForDelete()
     {
         $keysValues = array();
-        foreach ($this->description as $key => $value) {
-            if ($value["Key"] == "PRI") { //cle primaire
-                $keysValues[] = $value["Field"] . ":'" . $value["Type"] . " (primary key, obligatoire)'";
-            }
-        }
+        $keysValues[] = "id_......:' ...... (primary key, obligatoire)'";
         $ts_object = implode(",\n\t\t", $keysValues);
         return <<<HTML
         <div id="json_delete" class="col-12">
