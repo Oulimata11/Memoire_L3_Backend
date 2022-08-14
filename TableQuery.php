@@ -35,7 +35,7 @@ class TableQuery
     }
     function dynamicCondition($data_condition, $operation)
     {
-        if (count($data_condition) == 0) {
+        if (empty($data_condition)) {
             return "";
         }
         $keyOperateurValue = array();

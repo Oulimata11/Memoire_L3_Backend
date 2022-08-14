@@ -1,4 +1,5 @@
 <?php
+
 use Taf\TafAuth;
 use Taf\TableQuery;
 try {
@@ -15,25 +16,24 @@ try {
     
     $table_query=new TableQuery($table_name);
     $params=$_POST;
-
-
+    
     if(count($params)==0){
         $reponse["status"] = false;
         $reponse["erreur"] = "Parameters required";
         echo json_encode($reponse);
         exit;
     }
-    // condition sur la modification
-    $condition=$table_query->dynamicCondition(json_decode($params["condition"]),'=');
-    // execution de la requete de modification
-    $query=$table_query->dynamicUpdate(json_decode($params["data"]),$condition);
-    //$reponse["query"]=$query;
-    $resultat=$taf_config->get_db()->exec($query);
-    if ($resultat) {
+    // pour charger l'heure courante
+    // $params["date_enregistrement"]=date("Y-m-d H:i:s");
+    $query=$table_query->dynamicInsert($params);
+    // $reponse["query"]=$query;
+    if ($taf_config->get_db()->exec($query)) {
         $reponse["status"] = true;
+        $params["id"]=$taf_config->get_db()->lastInsertId();
+        $reponse["data"] = $params;
     } else {
         $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur! ou pas de moification";
+        $reponse["erreur"] = "Erreur d'insertion à la base de ";
     }
     echo json_encode($reponse);
 } catch (\Throwable $th) {
