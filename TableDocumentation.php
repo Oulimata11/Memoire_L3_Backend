@@ -126,9 +126,9 @@ class TableDocumentation extends TafConfig
 
             $keysValues[] = '
             &lt;!-- ' . $cle . ' field avec un control de validite --&gt;
-            &lt;div class="form-group"&gt;
+            &lt;div class="form-group col-sm-6"&gt;
               &lt;label >' . $cle . '&lt;/label&gt;
-              &lt;input class="form-control" type="' . $type . '"  formControlName="' . $cle . '" class="form-control" [ngClass]="{ \'is-invalid\': submitted && f.' . $cle . '.errors }"/&gt;
+              &lt;input class="form-control" type="' . $type . '"  formControlName="' . $cle . '"  placeholder="' . $cle . '" class="form-control" [ngClass]="{ \'is-invalid\': submitted && f.' . $cle . '.errors }"/&gt;
               &lt;div *ngIf="submitted && f.' . $cle . '.errors" class="invalid-feedback"&gt;
                   &lt;div *ngIf="f.' . $cle . '.errors.required"&gt; ' . $cle . ' est obligatoire &lt;/div&gt;
               &lt;/div&gt;
@@ -138,8 +138,8 @@ class TableDocumentation extends TafConfig
         return <<<HTML
         <div class="row position-relative my-5">
           <div id="add_form" class="col-12">
-            &lt;form  [formGroup]="reactiveForm_add_{$this->table_name} " (ngSubmit)="onSubmit_add_{$this->table_name} ()" #form_add_{$this->table_name} ="ngForm" &gt;
-              ' . $content . '
+            &lt;form  [formGroup]="reactiveForm_add_{$this->table_name} " (ngSubmit)="onSubmit_add_{$this->table_name} ()" #form_add_{$this->table_name} ="ngForm" class="row"&gt;
+                $content
             &lt;/form&gt;
             &lt;!-- vous pouvez valider votre formulaire n\'importe ou --&gt;
             &lt;button type="button" class="btn btn-primary" [disabled]="loading_add_{$this->table_name} " (click)="form_add_{$this->table_name} .ngSubmit.emit()"&gt;{{loading_add_{$this->table_name} ?"En cours ...":"Valider"}}&lt;/button&gt;
@@ -169,11 +169,11 @@ class TableDocumentation extends TafConfig
                         constructor(private formBuilder: FormBuilder,public api:ApiService, private http:HttpClient) { }
                 
                         ngOnInit(): void {
-                        this.init_form()
+                            this.init_form()
                         }
                         init_form() {
                             this.reactiveForm_add_{$this->table_name}  = this.formBuilder.group({
-                            ' . $content . '
+                                $content
                             });
                         }
                     
@@ -181,14 +181,14 @@ class TableDocumentation extends TafConfig
                         get f(): any { return this.reactiveForm_add_{$this->table_name} .controls; }
                         // validation du formulaire
                         onSubmit_add_{$this->table_name} () {
-                        this.submitted = true;
-                        console.log(this.reactiveForm_add_{$this->table_name} .value)
-                        // stop here if form is invalid
-                        if (this.reactiveForm_add_{$this->table_name} .invalid) {
-                            return;
-                        }
-                        var {$this->table_name} =this.reactiveForm_add_{$this->table_name} .value
-                        this.add_{$this->table_name} ({$this->table_name} )
+                            this.submitted = true;
+                            console.log(this.reactiveForm_add_{$this->table_name} .value)
+                            // stop here if form is invalid
+                            if (this.reactiveForm_add_{$this->table_name} .invalid) {
+                                return;
+                            }
+                            var {$this->table_name} =this.reactiveForm_add_{$this->table_name} .value
+                            this.add_{$this->table_name} ({$this->table_name} )
                         }
                         // vider le formulaire
                         onReset_add_{$this->table_name} () {

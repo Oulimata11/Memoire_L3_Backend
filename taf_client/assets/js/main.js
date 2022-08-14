@@ -5,7 +5,8 @@ function post_request_function(route, params, call_back) {
         formdata.append(key, params[key]);
     }
     loading = true;
-    var base_url = "http://localhost/armatan/e_tax_backend/v2.0/";
+    // var base_url = "http://localhost/armatan/e_tax_backend/v2.0/";
+    var base_url = "https://kodi-hgs.com/dev/taf/";
     var xhr = new XMLHttpRequest();
     xhr.open("POST", base_url + route, true);
     xhr.send(formdata);
@@ -29,7 +30,8 @@ function post_request_function_with_token(route, params, call_back) {
         formdata.append(key, params[key]);
     }
     loading = true;
-    var base_url = "http://localhost/armatan/e_tax_backend/v2.0/";
+    // var base_url = "http://localhost/armatan/e_tax_backend/v2.0/";
+    var base_url = "https://kodi-hgs.com/dev/taf/";
     var xhr = new XMLHttpRequest();
     xhr.open("POST", base_url + route, true);
     xhr.setRequestHeader("Authorization", "Bearer "+token);

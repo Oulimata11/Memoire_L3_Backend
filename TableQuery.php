@@ -23,7 +23,7 @@ class TableQuery
             $keys[] = $key;
             $values[] = addslashes($value);
         }
-        return "INSERT INTO {$this->table_name}(`" . implode("`,`", $keys) . "`) VALUES('" . implode("','", $values) . "')";
+        return "INSERT INTO {$this->table_name}(" . implode(",", $keys) . ") VALUES('" . implode("','", $values) . "')";
     }
     function update_query($data_to_update, $condition)
     {
@@ -52,7 +52,7 @@ class TableQuery
         $keys[] = $key;
         $values[] = addslashes($value);
       }
-      return "INSERT INTO $this->table_name(`" . implode("`,`", $keys) . "`) VALUES('" . implode("','", $values) . "')";
+      return "INSERT INTO $this->table_name(" . implode(",", $keys) . ") VALUES('" . implode("','", $values) . "')";
     }
     
     function dynamicUpdate($assoc_array, $condition)

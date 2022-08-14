@@ -15,7 +15,7 @@ class TafAuth
     public $expire = null;
     public $serverName = "your.domain.name";
 
-    private $time_to_expire = 3;
+    private $time_to_expire = 120;
 
     public function __construct()
     {
@@ -46,6 +46,7 @@ class TafAuth
             if (!isset($_SERVER['HTTP_AUTHORIZATION']) || !preg_match('/Bearer\s(\S+)/', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
                 $reponse["status"] = false;
                 $reponse["data"] = 'Une connexion est requise pour accéder à cette ressource';
+                // var_dump($_SERVER);
             } else {
                 $jwt = $matches[1];
                 if (!$jwt) {
