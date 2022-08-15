@@ -142,8 +142,12 @@ class TableDocumentation extends TafConfig
                 $content
             &lt;/form&gt;
             &lt;!-- vous pouvez valider votre formulaire n\'importe ou --&gt;
-            &lt;button type="button" class="btn btn-primary" [disabled]="loading_add_{$this->table_name} " (click)="form_add_{$this->table_name} .ngSubmit.emit()"&gt;{{loading_add_{$this->table_name} ?"En cours ...":"Valider"}}&lt;/button&gt;
-            &lt;button class="btn btn-secondary" type="reset" (click)="onReset_add_{$this->table_name} ()"&gt;Vider&lt;/button&gt;
+           
+            &lt;div class="text-center m-2"&gt;
+                &lt;button type="button" class="btn btn-primary m-2" [disabled]="loading_add_{$this->table_name} "
+                    (click)="form_add_{$this->table_name} .ngSubmit.emit()">{{loading_add_{$this->table_name} ?"En cours ...":"Valider"}}&lt;/button&gt;
+                &lt;button class="btn btn-secondary m-2" type="reset" (click)="onReset_add_{$this->table_name} ()"&gt;Vider&lt;/button&gt;
+            &lt;/div&gt;
           </div>
         </div>
         HTML;
@@ -228,30 +232,22 @@ class TableDocumentation extends TafConfig
                 </div>
                 <div class="row position-relative">
                     <div id="add_exemple" class="col-12">
-                        add_{$this->table_name}({$this->table_name}: any){
-                        this.loading_add_{$this->table_name}=true;
-                        //transformation des parametres à envoyer
-                        let formdata = new FormData()
-                        for (const key in {$this->table_name}) {
-                            formdata.append(key, {$this->table_name}[key])
-                        }
-                    
-                        let api_url = "{$this->url}/add" 
-                        this.http.post(api_url, formdata).subscribe((reponse: any) => {
-                            this.loading_add_{$this->table_name}=false;
-                            //when success
-                            if(reponse.status){
-                            console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse = ",reponse)
-                            }else{
-                            console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse = ",reponse)
+                    add_{$this->table_name}({$this->table_name}: any) {
+                            this.loading_add_{$this->table_name} = true;
+                            this.api.taf_post("{$this->table_name}/add", {$this->table_name}, (reponse: any) => {
+                            this.loading_add_{$this->table_name} = false;
+                            if (reponse.status) {
+                                console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ", reponse);
+                                this.onReset_add_{$this->table_name}()
+                                alert("Cntribuable ajouté avec succés")
+                            } else {
+                                console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse= ", reponse);
+                                alert("L'opération a echoué")
                             }
-                        },
-                        (error: any) => {
-                            this.loading_add_{$this->table_name}=false;
-                            //when error
-                            console.log("Erreur inconnue! ", error)
+                        }, (error: any) => {
+                            this.loading_add_{$this->table_name} = false;
                         })
-                        }
+                    }
                     </div>
                 </div>
                 <div class="row">

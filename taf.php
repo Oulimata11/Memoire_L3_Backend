@@ -97,7 +97,8 @@
             <p class="col-12 fs-4 mt-2">
                 La configuration repose sur le fichier <span class="text-danger">TafConfig.php</span>.
                 Dans ce fichier vous devez spécifier: <br>
-                • l'adresse de votre serveur MYSQL <br>
+                • l'adresse de votre serveur MYSQL ou Postgres <br>
+                • ( dans le cadre de Postgres, n'oubliez pas d'activer l'extension au niveau de php.ini (";extension=pdo_pgsql" -> "extension=pdo_pgsql")) <br>
                 • le nom de votre base de donnée <br>
                 • votre nom d'utilisateur <br>
                 • votre mot de passe <br>

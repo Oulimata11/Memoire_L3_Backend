@@ -23,14 +23,10 @@ try {
         echo json_encode($reponse);
         exit;
     }
-    // pour charger l'heure courante
-    // $params["date_enregistrement"]=date("Y-m-d H:i:s");
-    // recupération de a clé primaire de la table pour la condition de modification
-    $query_primary_key="SHOW KEYS FROM $table_name WHERE Key_name = 'PRIMARY'";
-    $primary_key= $taf_config->get_db()->query($query_primary_key)->fetch()["Column_name"];
-    $condition="where $primary_key=".$params[$primary_key];
+    // condition sur la modification
+    $condition=$table_query->dynamicCondition(json_decode($params["condition"]),'=');
     // execution de la requete de modification
-    $query=$table_query->dynamicUpdate($params,$condition);
+    $query=$table_query->dynamicUpdate(json_decode($params["data"]),$condition);
     //$reponse["query"]=$query;
     $resultat=$taf_config->get_db()->exec($query);
     if ($resultat) {
