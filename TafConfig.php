@@ -11,12 +11,12 @@ class TafConfig
     public static $connected = null;
     public $tables = [];
 
-    public $database_type = "pgsql"; //mysql
-    public $host = "74.207.224.128";
-    public $port = "5432";
-    public $database_name = "etax";
-    public $user = "etax";
-    public $password = "~%tx12022#@";
+    public $database_type = "mysql"; //pgsql
+    public $host = "localhost";// adresse ou ip du serveur
+    public $port = "3306"; // 5432 si c'est pgsql
+    public $database_name = "";
+    public $user = "";
+    public $password = "";
 
 
     public function __construct()
