@@ -17,28 +17,7 @@ try {
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>TAF</title>
     <link href="../taf_assets/bootstrap.min.css" rel="stylesheet">
-    <style>
-        #get_exemple,
-        #add_exemple,
-        #edit_exemple,
-        #delete_exemple,
-        #add_form ,
-        #add_form_ts {
-            height: 400px;
-            font-size: 14px;
-        }
-
-        #json_add,
-        #json_edit,
-        #json_delete {
-            height: 250px;
-            font-size: 14px;
-        }
-
-        #json_delete {
-            height: 200px;
-        }
-    </style>
+    <link rel="stylesheet" href="../taf_assets/taf_index.css">
 </head>
 
 <body class="bg-light">
@@ -90,42 +69,6 @@ try {
 </body>
 <script src="../taf_assets/ace.js" type="text/javascript" charset="utf-8"></script>
 <script src="../taf_assets/bootstrap.bundle.min.js" type="text/javascript" charset="utf-8"></script>
-<script>
-    var globConfig = {
-        selectionStyle: "text",
-        readOnly: true,
-        showLineNumbers: false,
-        showGutter: false
-    };
-
-    var configJs = {
-        mode: "ace/mode/javascript",
-        theme: "ace/theme/monokai",
-        ...globConfig
-    };
-
-    var configJson = {
-        mode: "ace/mode/javascript",
-        theme: "ace/theme/github",
-        ...globConfig
-    };
-
-    var configHtml = {
-        mode: "ace/mode/html",
-        theme: "ace/theme/monokai",
-        ...globConfig
-    };
-
-    var editor_get = ace.edit('get_exemple', configJs),
-        editor_add = ace.edit('add_exemple', configJs),
-        editor_edit = ace.edit('edit_exemple', configJs),
-        editor_delete = ace.edit('delete_exemple', configJs),
-        editor_form = ace.edit('add_form', configHtml),
-        editor_form_ts = ace.edit('add_form_ts', configJs);
-
-    var json_add = ace.edit('json_add', configJson),
-        json_edit = ace.edit('json_edit', configJson),
-        json_delete = ace.edit('json_delete', configJson);
-</script>
+<script src="../taf_assets/taf_index.js"></script>
 
 </html>

@@ -11,8 +11,8 @@ class TafConfig
     public static $connected = null;
     public $tables = [];
 
-    public $database_type = "mysql"; //pgsql
-    public $host = "localhost";// adresse ou ip du serveur
+    public $database_type = "mysql"; // ou bien "pgsql"
+    public $host = "";// adresse ou ip du serveur
     public $port = "3306"; // 5432 si c'est pgsql
     public $database_name = "";
     public $user = "";

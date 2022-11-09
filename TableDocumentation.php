@@ -79,11 +79,10 @@ class TableDocumentation extends TafConfig
             <div class="row position-relative my-5">
                 <div id="get_exemple" class="col-12">
                     get_$this->table_name(){
-                    let api_url="{$this->url}/get";   //recevoir tout
-                    //let api_url="{$this->url}/get?id_{$this->table_name}=1"; // recevoir le(a) {$this->table_name} d\'identifiant 1
-            
-                    this.http.get(api_url).subscribe((reponse:any)=>{
+                    this.loading_edit_{$this->table_name} = true;
+                    this.api.taf_get("{$this->table_name}/get").subscribe((reponse:any)=>{
                         //when success
+                        this.loading_edit_{$this->table_name} = false;
                         if(reponse.status){
                             console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ",reponse);
                         }else{
@@ -92,6 +91,7 @@ class TableDocumentation extends TafConfig
                     },
                     (error:any)=>{
                         //when error
+                        this.loading_edit_{$this->table_name} = false;
                         console.log("Erreur inconnue! ",error);
                     })
                     }
@@ -128,7 +128,7 @@ class TableDocumentation extends TafConfig
             &lt;!-- ' . $cle . ' field avec un control de validite --&gt;
             &lt;div class="form-group col-sm-6"&gt;
               &lt;label >' . $cle . '&lt;/label&gt;
-              &lt;input class="form-control" type="' . $type . '"  formControlName="' . $cle . '"  placeholder="' . $cle . '" class="form-control" [ngClass]="{ \'is-invalid\': submitted && f.' . $cle . '.errors }"/&gt;
+              &lt;input class="form-control" type="' . $type . '"  formControlName="' . $cle . '"  placeholder="' . $cle . '"  [ngClass]="{ \'is-invalid\': submitted && f.' . $cle . '.errors }"/&gt;
               &lt;div *ngIf="submitted && f.' . $cle . '.errors" class="invalid-feedback"&gt;
                   &lt;div *ngIf="f.' . $cle . '.errors.required"&gt; ' . $cle . ' est obligatoire &lt;/div&gt;
               &lt;/div&gt;
@@ -196,9 +196,25 @@ class TableDocumentation extends TafConfig
                         }
                         // vider le formulaire
                         onReset_add_{$this->table_name} () {
-                        this.submitted = false;
-                        this.reactiveForm_add_{$this->table_name} .reset();
+                            this.submitted = false;
+                            this.reactiveForm_add_{$this->table_name} .reset();
                         }
+                        add_{$this->table_name}({$this->table_name}: any) {
+                            this.loading_add_{$this->table_name} = true;
+                            this.api.taf_post("{$this->table_name}/add", {$this->table_name}, (reponse: any) => {
+                            this.loading_add_{$this->table_name} = false;
+                            if (reponse.status) {
+                                console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ", reponse);
+                                this.onReset_add_{$this->table_name}()
+                                alert("Cntribuable ajouté avec succés")
+                            } else {
+                                console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse= ", reponse);
+                                alert("L'opération a echoué")
+                            }
+                        }, (error: any) => {
+                            this.loading_add_{$this->table_name} = false;
+                        })
+                    }
                     </div>
                 </div>
             HTML;
@@ -305,31 +321,177 @@ class TableDocumentation extends TafConfig
             </div>
             <div class="row position-relative my-5">
                 <div id="edit_exemple" class="col-12">
-                    edit_{$this->table_name} ({$this->table_name} : any){
-                    //transformation des parametres à envoyer
-                    let formdata = new FormData()
-                    for (const key in {$this->table_name} ) {
-                        formdata.append(key, {$this->table_name} [key])
-                    }
-                
-                    let api_url = "{$this->url}/edit" 
-                    this.http.post(api_url, formdata).subscribe((reponse: any)=>{
-                        //when success
-                        if(reponse.status){
-                        console.log("Opération effectuée avec succés sur la table {$this->table_name} . Réponse = ",reponse)
-                        }else{
-                        console.log("L\'opération sur la table {$this->table_name}  a échoué. Réponse = ",reponse)
+                    edit_{$this->table_name}({$this->table_name}: any) {
+                        this.loading_edit_{$this->table_name} = true;
+                        this.api.taf_post("{$this->table_name}/edit", {$this->table_name}, (reponse: any) => {
+                        this.loading_edit_{$this->table_name} = false;
+                        if (reponse.status) {
+                            console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ", reponse);
+                            this.onReset_edit_{$this->table_name}()
+                            alert("Cntribuable ajouté avec succés")
+                        } else {
+                            console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse= ", reponse);
+                            alert("L'opération a echoué")
                         }
-                    },
-                    (error: any)=>{
-                        //when error
-                        console.log("Erreur inconnue! ",error)
-                    })
+                        }, (error: any) => {
+                        this.loading_edit_{$this->table_name} = false;
+                        })
                     }
                 </div>
             </div>
+            <div class="row">
+                <p class="col-12 text-justify fs-4">Pour modifier</p>
+                {$this->edit_form_html()}
+                <h6>TS</h6>
+                {$this->edit_form_ts()}
+            </div>
         </div>
         HTML;
+    }
+    public function edit_form_html()
+    {
+        $keysValues = array();
+        foreach ($this->description as $key => $value) {
+            $cle = $value;
+            $type = 'text';
+
+            $keysValues[] = '
+            &lt;!-- ' . $cle . ' field avec un control de validite --&gt;
+            &lt;div class="form-group col-sm-6"&gt;
+              &lt;label >' . $cle . '&lt;/label&gt;
+              &lt;input class="form-control" type="' . $type . '"  formControlName="' . $cle . '"  placeholder="' . $cle . '" class="form-control" [ngClass]="{ \'is-invalid\': submitted && f.' . $cle . '.errors }"/&gt;
+              &lt;div *ngIf="submitted && f.' . $cle . '.errors" class="invalid-feedback"&gt;
+                  &lt;div *ngIf="f.' . $cle . '.errors.required"&gt; ' . $cle . ' est obligatoire &lt;/div&gt;
+              &lt;/div&gt;
+            &lt;/div&gt;';
+        }
+        $content = implode("\t\t", $keysValues);
+        return <<<HTML
+        <div class="row position-relative my-5">
+          <div id="edit_form" class="col-12">
+            &lt;form  [formGroup]="reactiveForm_edit_{$this->table_name} " (ngSubmit)="onSubmit_edit_{$this->table_name} ()" #form_edit_{$this->table_name} ="ngForm" class="row"&gt;
+                $content
+            &lt;/form&gt;
+            &lt;!-- vous pouvez valider votre formulaire n\'importe ou --&gt;
+           
+            &lt;div class="text-center m-2"&gt;
+                &lt;button type="button" class="btn btn-primary m-2" [disabled]="loading_edit_{$this->table_name} "
+                    (click)="form_edit_{$this->table_name} .ngSubmit.emit()">{{loading_edit_{$this->table_name} ?"En cours ...":"Valider"}}&lt;/button&gt;
+                &lt;button class="btn btn-secondary m-2" type="reset" (click)="onReset_edit_{$this->table_name} ()"&gt;Vider&lt;/button&gt;
+            &lt;/div&gt;
+          </div>
+        </div>
+        HTML;
+    }
+    public function edit_form_ts()
+    {
+        $keysValues = array();
+        foreach ($this->description as $key => $value) {
+            $cle = $value;
+            $type = 'text';
+
+            $keysValues[] = '
+            ' . $cle . ': ["", Validators.required]';
+            $keysValues_update[] = '
+            ' . $cle . ': ['.$this->table_name.'_to_edit.' . $cle . ', Validators.required]';
+        }
+        $content = implode(",", $keysValues);
+        $content_update = implode(",", $keysValues_update);
+        return <<<HTML
+                <div class="row position-relative my-5">
+                    <div id="edit_form_ts" class="col-12">
+                        reactiveForm_edit_{$this->table_name} !: FormGroup;
+                        submitted: boolean = false
+                        loading_edit_{$this->table_name}: boolean = false
+                        id_{$this->table_name}:number=0;
+                        {$this->table_name}_to_edit: any = {}
+                        constructor(private formBuilder: FormBuilder, public api: ApiService, private http: HttpClient,private a_route:ActivatedRoute) { 
+                            // récupération des paramètres depuis l'URL
+                            a_route.params.subscribe((params:any)=>{
+                                if (params["id_{$this->table_name}"]) {// si le prametre id_{$this->table_name} est présent sur l'URL
+                                    this.id_{$this->table_name}=params["id_{$this->table_name}"]
+                                    this.get_{$this->table_name}(this.id_{$this->table_name})
+                                } else {// en cas d'absence
+                                    alert("L'URL est incorrect. Il manque l'information 'id_{$this->table_name}'")
+                                }
+                            })
+                        }
+                        ngOnInit(): void {
+                            this.init_form()
+                        }
+                        init_form() {
+                            this.reactiveForm_edit_{$this->table_name}  = this.formBuilder.group({
+                                $content
+                            });
+                        }
+                        // récupération des details de l'élément à modifier
+                        get_{$this->table_name}(id_{$this->table_name}: number) {
+                            this.api.taf_get("{$this->table_name}/get?id_{$this->table_name}=" + id_{$this->table_name}, (reponse: any) => {
+                                //when success
+                                if (reponse.status) {
+                                    console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ", reponse);
+                                    if (reponse.data.length>0) {
+                                        this.{$this->table_name}_to_edit = reponse.data[0]
+                                        this.update_form(this.{$this->table_name}_to_edit)
+                                    } else {
+                                        alert("Détails de l'élément à modifier introuvable")
+                                    }
+                                } else {
+                                    console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse= ", reponse);
+                                }
+                            },
+                            (error: any) => {
+                                //when error
+                                console.log("Erreur inconnue! ", error);
+                            })
+                        }
+                        // mise à jour du formulaire
+                        update_form({$this->table_name}_to_edit:any) {
+                            this.reactiveForm_edit_{$this->table_name} = this.formBuilder.group({
+                                $content_update
+                            });
+                        }
+                    
+                        // acces facile au champs de votre formulaire
+                        get f(): any { return this.reactiveForm_edit_{$this->table_name} .controls; }
+                        // validation du formulaire
+                        onSubmit_edit_{$this->table_name}() {
+                            this.submitted = true;
+                            console.log(this.reactiveForm_edit_{$this->table_name}.value)
+                            // stop here if form is invalid
+                            if (this.reactiveForm_edit_{$this->table_name}.invalid) {
+                                return;
+                            }
+                            var {$this->table_name} = this.reactiveForm_edit_{$this->table_name}.value
+                            this.edit_{$this->table_name}({
+                            condition:JSON.stringify({id_{$this->table_name}:this.id_{$this->table_name}}),
+                            data:JSON.stringify({$this->table_name})
+                            })
+                        }
+                        // vider le formulaire
+                        onReset_edit_{$this->table_name}() {
+                            this.submitted = false;
+                            this.reactiveForm_edit_{$this->table_name}.reset();
+                        }
+                        edit_{$this->table_name}({$this->table_name}: any) {
+                            this.loading_edit_{$this->table_name} = true;
+                            this.api.taf_post("{$this->table_name}/edit", {$this->table_name}, (reponse: any) => {
+                                this.loading_edit_{$this->table_name} = false;
+                                if (reponse.status) {
+                                    console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ", reponse);
+                                    this.onReset_edit_{$this->table_name}()
+                                    alert("Opération effectuée avec succés sur la table {$this->table_name}")
+                                } else {
+                                    console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse= ", reponse);
+                                    alert("L'opération a echoué")
+                                }
+                            }, (error: any) => {
+                                this.loading_edit_{$this->table_name} = false;
+                            })
+                        }
+                    </div>
+                </div>
+            HTML;
     }
 
     function getParamsForDelete()

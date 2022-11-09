@@ -17,7 +17,7 @@ try {
     $table_query=new TableQuery($table_name);
     $params=$_POST;
     
-    if(count($params)==0){
+    if(empty($params)){
         $reponse["status"] = false;
         $reponse["erreur"] = "Parameters required";
         echo json_encode($reponse);

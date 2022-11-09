@@ -49,8 +49,8 @@ class TableQuery
       $keys = array();
       $values = array();
       foreach ($assoc_array as $key => $value) {
-        $keys[] = $key;
-        $values[] = addslashes($value);
+        $keys[] = addslashes(htmlspecialchars($key));
+        $values[] = addslashes(htmlspecialchars($value));
       }
       return "INSERT INTO $this->table_name(" . implode(",", $keys) . ") VALUES('" . implode("','", $values) . "')";
     }
