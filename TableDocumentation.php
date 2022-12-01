@@ -206,7 +206,7 @@ class TableDocumentation extends TafConfig
                             if (reponse.status) {
                                 console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ", reponse);
                                 this.onReset_add_{$this->table_name}()
-                                alert("Cntribuable ajouté avec succés")
+                                alert("Opération éffectuée avec succés")
                             } else {
                                 console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse= ", reponse);
                                 alert("L'opération a echoué")
@@ -328,7 +328,7 @@ class TableDocumentation extends TafConfig
                         if (reponse.status) {
                             console.log("Opération effectuée avec succés sur la table {$this->table_name}. Réponse= ", reponse);
                             this.onReset_edit_{$this->table_name}()
-                            alert("Cntribuable ajouté avec succés")
+                            alert("Opération éffectuée ajouté avec succés")
                         } else {
                             console.log("L\'opération sur la table {$this->table_name} a échoué. Réponse= ", reponse);
                             alert("L'opération a echoué")
