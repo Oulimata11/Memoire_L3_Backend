@@ -11,9 +11,9 @@ class TafConfig
     public static $connected = null;
     public $tables = [];
 
-    public $database_type = "mysql"; // ou bien "pgsql"
-    public $host = "";// adresse ou ip du serveur
-    public $port = "3306"; // 5432 si c'est pgsql
+    public $database_type = ""; // "mysql" | "pgsql" | "sqlsrv"
+    public $host = "localhost";// adresse ou ip du serveur
+    public $port = ""; // 5432 pour pgsql | 1433 pour sqlsrv 
     public $database_name = "";
     public $user = "";
     public $password = "";
@@ -34,7 +34,9 @@ class TafConfig
                 case 'mysql':
                     $this->tables = $this->get_db()->query("SHOW TABLES")->fetchAll(PDO::FETCH_COLUMN);
                     break;
-
+                case 'sqlsrv':
+                    $this->tables = $this->get_db()->query("SELECT TABLE_NAME FROM INFORMATION_SCHEMA.TABLES WHERE TABLE_TYPE='BASE TABLE'")->fetchAll(PDO::FETCH_COLUMN);
+                    break;
                 default:
                     // type de base de données inconnu
                     break;
@@ -50,7 +52,21 @@ class TafConfig
     {
         if (static::$db_instance == null) {
             try {
-                static::$db_instance = new PDO("{$this->database_type}:host={$this->host};port={$this->port};dbname={$this->database_name};", $this->user, $this->password);
+                switch ($this->database_type) {
+                    case 'pgsql':
+                        static::$db_instance = new PDO("{$this->database_type}:host={$this->host};port={$this->port};dbname={$this->database_name};", $this->user, $this->password);
+                        break;
+                    case 'mysql':
+                        static::$db_instance = new PDO("{$this->database_type}:host={$this->host};port={$this->port};dbname={$this->database_name};", $this->user, $this->password);
+                        break;
+                    case 'sqlsrv':
+                        static::$db_instance = new PDO("{$this->database_type}:Server={$this->host};Database={$this->database_name}", $this->user, $this->password);
+                        break;
+                    default:
+                        // type de base de données inconnu
+                        break;
+                }
+                
                 //à commenter en mode production. Il permet de montrer les erreur explicitement
                 static::$db_instance->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
                 self::$connected = true;

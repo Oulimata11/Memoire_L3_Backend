@@ -24,7 +24,9 @@ class TableDocumentation extends TafConfig
             case 'mysql':
                 $this->description = $this->get_db()->query("desc {$this->table_name}")->fetchAll(PDO::FETCH_COLUMN);
                 break;
-
+            case 'sqlsrv':
+                $this->description = $this->get_db()->query("select column_name from information_schema.columns where table_name = '{$this->table_name}' order by ordinal_position")->fetchAll(PDO::FETCH_COLUMN);
+                break;
             default:
                 // type de base de données inconnu
                 break;
