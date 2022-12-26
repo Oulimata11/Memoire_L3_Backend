@@ -11,12 +11,12 @@ class TafConfig
     public static $connected = null;
     public $tables = [];
 
-    public $database_type = ""; // "mysql" | "pgsql" | "sqlsrv"
+    public $database_type = "mysql"; // "mysql" | "pgsql" | "sqlsrv"
     public $host = "localhost";// adresse ou ip du serveur
-    public $port = ""; // 5432 pour pgsql | 1433 pour sqlsrv 
-    public $database_name = "";
-    public $user = "";
-    public $password = "";
+    public $port = "3306"; // 3306 pour mysql | 5432 pour pgsql | 1433 pour sqlsrv 
+    public $database_name = "test";// nom de la base de données
+    public $user = "root";// nom de l'utilisateur
+    public $password = "root";// mot de passe de l'utilisateur
 
 
     public function __construct()

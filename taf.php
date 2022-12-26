@@ -13,7 +13,7 @@
     <link href="./taf_assets/bootstrap.min.css" rel="stylesheet">
     <style>
         #editor {
-            height: 100px;
+            height: 150px;
             font-size: 14px;
         }
 
@@ -59,7 +59,7 @@
     <main class="container mt-5">
         <div class="row">
             <p class="col-12 text-justify fs-4">
-                TAF est un générateur automatique d'api à partir d'une base de données <strong>MYSQL</strong>. Une fois
+                TAF est un générateur automatique d'api à partir d'une base de données <strong class="text-danger">MYSQL</strong> ou <strong class="text-danger">PGSQL</strong> ou <strong class="text-danger">SQLSRV</strong>. Une fois
                 que vous avez bien configuré le fichier de configuration (config.php), grâce à l'api vous pouvez voir toutes
                 les tables de votre base de données et ainsi générer les fichiers nécessaires à la manipulation de ces tables
                 comme la recupération, la suppression, l'ajout, la modification d'une donnée.
@@ -108,10 +108,12 @@
         <div class="col-12">
             <div class="row position-relative my-3">
                 <div id="editor" class="col-12">
-                    $host = "localhost:3306";
-                    $database_name = "test";
-                    $user = "root";
-                    $password = "root";
+                public $database_type = "mysql"; // "mysql" | "pgsql" | "sqlsrv"
+                public $host = "localhost";// adresse ou ip du serveur
+                public $port = "3306"; // 3306 pour mysql | 5432 pour pgsql | 1433 pour sqlsrv 
+                public $database_name = "test";// nom de la base de données
+                public $user = "root";// nom de l'utilisateur
+                public $password = "";// mot de passe de l'utilisateur
                 </div>
             </div>
         </div>
