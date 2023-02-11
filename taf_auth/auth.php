@@ -30,7 +30,7 @@ try {
     $login=addslashes($params["login"]);
     $pwd=addslashes($params["pwd"]);
 
-    $query = "select * from agents where login ='$login' and pwd=md5('$pwd') ";
+    $query = "select * from utilisateur where login ='$login' and pwd=md5('$pwd') ";
     $resultat = $taf_config->get_db()->query($query)->fetch(PDO::FETCH_ASSOC);
     if ($resultat) {
         $reponse["status"] = true;
