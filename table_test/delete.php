@@ -8,17 +8,14 @@ try {
     require '../taf_auth/TafAuth.php';
     $taf_auth = new TafAuth();
     // toutes les actions nécéssitent une authentification
-    $auth_reponse=$taf_auth->check_auth($reponse);
-    if ($auth_reponse["status"] == false) {
-        echo json_encode($auth_reponse);
+    $taf_auth->check_auth($reponse);
+    if ($reponse["status"] == false) {
+        echo json_encode($reponse);
         die;
     }
     
     $table_query=new TableQuery($table_name);
-    /* 
-        $params
-        contient tous les parametres envoyés par la methode POST
-     */
+    $params=$_POST;    
 
     
     if(count($params)==0){

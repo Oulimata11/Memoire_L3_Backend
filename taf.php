@@ -1,7 +1,10 @@
 <?php
-    require './TafConfig.php';
-    $taf_config = new \Taf\TafConfig();
+session_start();
+require './TafConfig.php';
+$taf_config = new \Taf\TafConfig();
+$taf_config->check_documentation_auth();
 ?>
+
 <!DOCTYPE html>
 <html lang="fr">
 
@@ -52,7 +55,10 @@
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
             <div class="container-fluid">
                 <a href="#" class="navbar-brand text-danger">TAF</a>
-                <a href="https://h24code.com/donate.html" target="_blank" class="px-2 right"><button class="btn btn-secondary">Faire un don</button></a>
+                <span>
+                    <a href="https://h24code.com/donate.html" target="_blank" class="px-2 right"><button class="btn btn-secondary">Faire un don</button></a>
+                    <a href="login.php" class="px-2 right"><button class="btn btn-danger">Déconnexion</button></a>
+                </span>
             </div>
         </nav>
     </header>
@@ -64,7 +70,7 @@
                 les tables de votre base de données et ainsi générer les fichiers nécessaires à la manipulation de ces tables
                 comme la recupération, la suppression, l'ajout, la modification d'une donnée.
             </p>
-            <?php if ($taf_config->is_connected()) : ?> 
+            <?php if ($taf_config->is_connected()) : ?>
                 <h1 class="col-12 ">La(es) table(s) de la base de données <span class="text-danger"><?= $taf_config->database_name ?></span>
                     <a href="./generate.php?tout=oui" class="px-2 right"><button class="btn btn-warning">Tout générer</button></a>
                 </h1>
@@ -76,7 +82,7 @@
                     foreach ($taf_config->tables as $key => $table_name) {
                         if (array_search($table_name, $files)) { // table dèja générée
                             echo "<li id='table_$table_name' class='list-group-item fs-3  d-flex justify-content-between align-items-center bg-light'><span>" . $table_name . "</span><a class='px-2 right' href='./$table_name'><button class='btn btn-primary'> --------> voir exemple </button></a></li>";
-                        } else {// table non encore générée
+                        } else { // table non encore générée
                             echo "<li id='table_$table_name' class='list-group-item fs-3  d-flex justify-content-between align-items-center'><span>" . $table_name . "</span><a class='px-2 right' href='generate?table=$table_name'><button class='btn btn-secondary'>Générer les routes </button></a>";
                         }
                     }
@@ -108,19 +114,19 @@
         <div class="col-12">
             <div class="row position-relative my-3">
                 <div id="editor" class="col-12">
-                public $database_type = "mysql"; // "mysql" | "pgsql" | "sqlsrv"
-                public $host = "localhost";// adresse ou ip du serveur
-                public $port = "3306"; // 3306 pour mysql | 5432 pour pgsql | 1433 pour sqlsrv 
-                public $database_name = "test";// nom de la base de données
-                public $user = "root";// nom de l'utilisateur
-                public $password = "";// mot de passe de l'utilisateur
+                    public $database_type = "mysql"; // "mysql" | "pgsql" | "sqlsrv"
+                    public $host = "localhost";// adresse ou ip du serveur
+                    public $port = "3306"; // 3306 pour mysql | 5432 pour pgsql | 1433 pour sqlsrv
+                    public $database_name = "test";// nom de la base de données
+                    public $user = "root";// nom de l'utilisateur
+                    public $password = "";// mot de passe de l'utilisateur
                 </div>
             </div>
         </div>
     </main>
 </body>
 <!-- JavaScript Bundle with Popper -->
-<script src="./taf_assets/bootstrap.bundle.min.js" ></script>
+<script src="./taf_assets/bootstrap.bundle.min.js"></script>
 <script src="./taf_assets/ace.js" type="text/javascript" charset="utf-8"></script>
 <script>
     var config = {

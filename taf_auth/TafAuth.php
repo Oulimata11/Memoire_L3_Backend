@@ -40,37 +40,39 @@ class TafAuth
         $jwt = JWT::encode($data, $this->secretKey, 'HS256');
         return $jwt;
     }
-    public function check_auth(&$reponse)
+    public function check_auth()
     {
+        $auth_reponse=array("status"=>false,"message"=>"");
         try {
             if (!isset($_SERVER['HTTP_AUTHORIZATION']) || !preg_match('/Bearer\s(\S+)/', $_SERVER['HTTP_AUTHORIZATION'], $matches)) {
-                $reponse["status"] = false;
-                $reponse["data"] = 'Une connexion est requise pour accéder à cette ressource';
+                $auth_reponse["status"] = false;
+                $auth_reponse["message"] = 'Une connexion est requise pour accéder à cette ressource';
                 // var_dump($_SERVER);
             } else {
                 $jwt = $matches[1];
                 if (!$jwt) {
-                    $reponse["status"] = false;
-                    $reponse["data"] = 'Une connexion est requise pour accéder à cette ressource';
+                    $auth_reponse["status"] = false;
+                    $auth_reponse["message"] = 'Une connexion est requise pour accéder à cette ressource';
                 } else {
                     $token = JWT::decode($jwt, new Key($this->secretKey, 'HS256'));
                     $now = new DateTimeImmutable();
 
                     if ($token->nbf > $now->getTimestamp()) {
-                        $reponse["status"] = false;
-                        $reponse["data"] = 'Il n\'est pas encore l\'heure de démarrer la session';
+                        $auth_reponse["status"] = false;
+                        $auth_reponse["message"] = 'Il n\'est pas encore l\'heure de démarrer la session';
                     }elseif ($token->exp < $now->getTimestamp()) {
-                        $reponse["status"] = false;
-                        $reponse["data"] = 'votre session est expirée';
+                        $auth_reponse["status"] = false;
+                        $auth_reponse["message"] = 'votre session est expirée';
                     }else{
-                        $reponse["status"] = true;
-                        $reponse["data"] = 'session valide';
+                        $auth_reponse["status"] = true;
+                        $auth_reponse["message"] = 'session valide';
                     }
                 }
             }
         } catch (\Throwable $th) {
-            $reponse["status"] = false;
-            $reponse["data"] = $th->getMessage();
+            $auth_reponse["status"] = false;
+            $auth_reponse["message"] = $th->getMessage();
         }
+        return $auth_reponse;
     }
 }

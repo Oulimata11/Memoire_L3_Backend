@@ -12,19 +12,25 @@ try {
     $taf_config->allow_cors();
 
     $params=$_POST;
+    if (file_get_contents('php://input')=="") {
+        $params=[];
+    } else {
+        $params=json_decode(file_get_contents('php://input'),true);
+    }   
     // var_dump($params);
     // die;
     $reponse["params"]=$params;
+
     if(count($params)==0){
         $reponse["status"] = false;
         $reponse["erreur"] = "Parameters required";
         echo json_encode($reponse);
         exit;
     }
-    $email=addslashes($params["email"]);
-    $password=addslashes($params["password"]);
+    $login=addslashes($params["login"]);
+    $pwd=addslashes($params["pwd"]);
 
-    $query = "select * from taf_user where email ='$email' and password='$password' ";
+    $query = "select * from agents where login ='$login' and pwd=md5('$pwd') ";
     $resultat = $taf_config->get_db()->query($query)->fetch(PDO::FETCH_ASSOC);
     if ($resultat) {
         $reponse["status"] = true;

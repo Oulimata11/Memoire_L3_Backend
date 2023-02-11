@@ -1,7 +1,4 @@
 <?php
-
-use Taf\TafConfig;
-
 require './TafConfig.php';
-$taf_config = new TafConfig();
-var_dump($taf_config->get_db());
+$taf_config = new \Taf\TafConfig();
+$taf_config->disconnect_documentation_auth();

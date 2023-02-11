@@ -1,10 +1,8 @@
 <?php
-session_start();
 try {
     require './config.php';
     require '../TableDocumentation.php';
     $table_documentation = new \Taf\TableDocumentation($table_name);
-    $taf_config->check_documentation_auth();
 } catch (\Throwable $th) {
     echo "<h1>" . $th->getMessage() . "</h1>";
 }
@@ -27,10 +25,7 @@ try {
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
             <div class="container-fluid">
                 <a href='../taf.php' class="navbar-brand text-danger">TAF</a>
-                <span>
-                    <a href="https://h24code.com/donate.html" target="_blank" class="px-2 right"><button class="btn btn-secondary">Faire un don</button></a>
-                    <a href="../login.php" class="px-2 right"><button class="btn btn-danger">Déconnexion</button></a>
-                </span>
+                <a href="https://h24code.com/donate.html" target="_blank" class="px-2 right"><button class="btn btn-secondary">Faire un don</button></a>
             </div>
         </nav>
     </header>

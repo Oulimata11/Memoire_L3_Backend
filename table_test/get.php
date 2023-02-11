@@ -7,15 +7,12 @@ try {
     require './config.php';
     require '../TableQuery.php';
     require '../taf_auth/TafAuth.php';
+    $params=$_GET;
     $taf_auth = new TafAuth();
-    /* 
-        $params
-        contient tous les parametres envoyés par la methode POST
-     */
     // toutes les actions nécéssitent une authentification
-    $auth_reponse=$taf_auth->check_auth();
-    if ($auth_reponse["status"] == false && count($params)==0) {
-        echo json_encode($auth_reponse);
+    $taf_auth->check_auth($reponse);
+    if ($reponse["status"] == false && count($params)==0) {
+        echo json_encode($reponse);
         die;
     }
     

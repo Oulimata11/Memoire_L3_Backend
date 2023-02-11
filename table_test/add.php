@@ -1,4 +1,5 @@
 <?php
+
 use Taf\TafAuth;
 use Taf\TableQuery;
 try {
@@ -7,35 +8,32 @@ try {
     require '../taf_auth/TafAuth.php';
     $taf_auth = new TafAuth();
     // toutes les actions nécéssitent une authentification
-    $auth_reponse=$taf_auth->check_auth($reponse);
-    if ($auth_reponse["status"] == false) {
-        echo json_encode($auth_reponse);
+    $taf_auth->check_auth($reponse);
+    if ($reponse["status"] == false) {
+        echo json_encode($reponse);
         die;
     }
     
     $table_query=new TableQuery($table_name);
-   /* 
-        $params
-        contient tous les parametres envoyés par la methode POST
-     */
-
+    $params=$_POST;
+    
     if(empty($params)){
         $reponse["status"] = false;
         $reponse["erreur"] = "Parameters required";
         echo json_encode($reponse);
         exit;
     }
-    // condition sur la modification
-    $condition=$table_query->dynamicCondition(json_decode($params["condition"]),'=');
-    // execution de la requete de modification
-    $query=$table_query->dynamicUpdate(json_decode($params["data"]),$condition);
-    //$reponse["query"]=$query;
-    $resultat=$taf_config->get_db()->exec($query);
-    if ($resultat) {
+    // pour charger l'heure courante
+    // $params["date_enregistrement"]=date("Y-m-d H:i:s");
+    $query=$table_query->dynamicInsert($params);
+    // $reponse["query"]=$query;
+    if ($taf_config->get_db()->exec($query)) {
         $reponse["status"] = true;
+        $params["id"]=$taf_config->get_db()->lastInsertId();
+        $reponse["data"] = $params;
     } else {
         $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur! ou pas de moification";
+        $reponse["erreur"] = "Erreur d'insertion à la base de ";
     }
     echo json_encode($reponse);
 } catch (\Throwable $th) {
