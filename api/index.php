@@ -17,7 +17,7 @@ try {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAF</title>
+    <title>JantTaf</title>
     <link href="../taf_assets/bootstrap.min.css" rel="stylesheet">
     <link rel="stylesheet" href="../taf_assets/taf_index.css">
 </head>
@@ -26,7 +26,7 @@ try {
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
             <div class="container-fluid">
-                <a href='../taf.php' class="navbar-brand text-danger">TAF</a>
+                <a href='../taf.php' class="navbar-brand text-danger">JantTaf</a>
                 <span>
                     <a href="https://h24code.com/donate.html" target="_blank" class="px-2 right"><button class="btn btn-secondary">Faire un don</button></a>
                     <a href="../login.php" class="px-2 right"><button class="btn btn-danger">Déconnexion</button></a>

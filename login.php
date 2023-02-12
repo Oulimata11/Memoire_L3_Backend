@@ -30,7 +30,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>TAF</title>
+    <title>JantTaf</title>
     <link href="./taf_assets/bootstrap.min.css" rel="stylesheet">
     <style>
         #editor {
@@ -72,7 +72,7 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
     <header>
         <nav class="navbar navbar-expand-lg navbar-light bg-dark">
             <div class="container-fluid">
-                <a href="taf.php" class="navbar-brand text-danger">TAF</a>
+                <a href="taf.php" class="navbar-brand text-danger">JantTaf</a>
                 <span>
                     <a href="https://h24code.com/donate.html" target="_blank" class="px-2 right"><button class="btn btn-secondary">Faire un don</button></a>
                 </span>
@@ -96,12 +96,12 @@ if (isset($_POST["username"]) && isset($_POST["password"])) {
                 ?>
                 <form method="post" action="login.php">
                     <div class="mb-3">
-                        <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur TAF</label>
+                        <label for="exampleInputEmail1" class="form-label">Nom d'utilisateur JantTaf</label>
                         <input type="text" name="username" required placeholder="admin" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp">
                         <div id="emailHelp" class="form-text">Ces informations sont définis sur le fichier TafConfig.php</div>
                     </div>
                     <div class="mb-3">
-                        <label for="exampleInputPassword1" class="form-label">Mot de passe TAF</label>
+                        <label for="exampleInputPassword1" class="form-label">Mot de passe JantTaf</label>
                         <input type="password" name="password" class="form-control" id="exampleInputPassword1">
                     </div>
                     <button type="submit" class="btn btn-primary">Se connecter</button>

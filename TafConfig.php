@@ -11,7 +11,7 @@ class TafConfig
     public static $connected = null;
     public $tables = [];
     public static $user_disconnected = false;
-
+    /* Information de connexion à la base de données */
     public $database_type = "mysql"; // "mysql" | "pgsql" | "sqlsrv"
     public $host = "localhost"; // adresse ou ip du serveur
     public $port = "3306"; // 3306 pour mysql | 5432 pour pgsql | 1433 pour sqlsrv 
@@ -19,7 +19,7 @@ class TafConfig
     public $user = "root"; // nom de l'utilisateur de la base de données
     public $password = ""; // mot de passe de l'utilisateur de la base de données
 
-
+    /* informations de connexion à la documentation */
     public $documentation_username = "admin"; // nom d'utilisateur pour accéder à la documentation
     public $documentation_password = "1234"; // mot de passe de l'utilisateur pour accéder à la documentation
 
