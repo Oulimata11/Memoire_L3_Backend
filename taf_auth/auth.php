@@ -27,10 +27,10 @@ try {
         echo json_encode($reponse);
         exit;
     }
-    $login=addslashes($params["login"]);
-    $pwd=addslashes($params["pwd"]);
+    $login=addslashes($params["email"]);
+    $pwd=addslashes($params["password"]);
 
-    $query = "select * from utilisateur where login ='$login' and pwd=md5('$pwd') ";
+    $query = "select * from utilisateur where email_utilisateur='$login' and password_utilisateur=md5('$pwd') ";
     $resultat = $taf_config->get_db()->query($query)->fetch(PDO::FETCH_ASSOC);
     if ($resultat) {
         $reponse["status"] = true;
