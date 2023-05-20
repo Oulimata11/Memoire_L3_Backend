@@ -27,8 +27,8 @@ try {
         echo json_encode($reponse);
         exit;
     }
-    $login=addslashes($params["email"]);
-    $pwd=addslashes($params["password"]);
+    $login=addslashes($params["login"]);
+    $pwd=addslashes($params["pwd"]);
 
     $query = "select * from utilisateur where email_utilisateur='$login' and password_utilisateur=md5('$pwd') ";
     $resultat = $taf_config->get_db()->query($query)->fetch(PDO::FETCH_ASSOC);
