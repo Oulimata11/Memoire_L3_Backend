@@ -23,7 +23,7 @@ try {
 
     $condition=$table_query->dynamicCondition($params,"=");
     // $reponse["condition"]=$condition;
-    $query="select *from $table_name ".$condition;
+    $query="select *from utilisateur u, role r where u.id_role=r.id_role";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 

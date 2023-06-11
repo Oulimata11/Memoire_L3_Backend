@@ -29,6 +29,10 @@ try {
     }
     // pour charger l'heure courante
     // $params["date_enregistrement"]=date("Y-m-d H:i:s");
+  // Chiffrement du mot de passe
+  $password_utilisateur = $params["password_utilisateur"];
+  $password_hash = md5($password_utilisateur);
+  $params["password_utilisateur"] = $password_hash;
     $query = $table_query->dynamicInsert($params);
     // $reponse["query"]=$query;
     if ($taf_config->get_db()->exec($query)) {
