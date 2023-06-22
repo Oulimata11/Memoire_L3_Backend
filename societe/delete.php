@@ -27,12 +27,13 @@ try {
         echo json_encode($reponse);
         exit;
     }
-    // recupération de a clé primaire de la table pour la condition de modification
-    $query_primary_key="SHOW KEYS FROM $table_name WHERE Key_name = 'PRIMARY'";
-    $primary_key= $taf_config->get_db()->query($query_primary_key)->fetch()["Column_name"];
-    $condition="where $primary_key=".$params[$primary_key];
+    // // recupération de a clé primaire de la table pour la condition de modification
+    // $query_primary_key="SHOW KEYS FROM $table_name WHERE Key_name = 'PRIMARY'";
+    // $primary_key= $taf_config->get_db()->query($query_primary_key)->fetch()["Column_name"];
+    // $condition="where $primary_key=".$params[$primary_key];
     // execution de la requete de modification
-    $query="delete from $table_name ".$condition;
+    $id=$params["id"];
+    $query="delete from $table_name where id_societe=$id";
     // $reponse["query"]=$query;
     $resultat=$taf_config->get_db()->exec($query);
     if ($resultat) {
