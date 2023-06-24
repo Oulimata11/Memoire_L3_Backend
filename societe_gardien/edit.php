@@ -1,5 +1,4 @@
 <?php
-
 use Taf\TafAuth;
 use Taf\TableQuery;
 try {
@@ -15,31 +14,28 @@ try {
     }
     
     $table_query=new TableQuery($table_name);
-    /* 
+   /* 
         $params
         contient tous les parametres envoyés par la methode POST
      */
 
-    
-    if(count($params)==0){
+    if(empty($params)){
         $reponse["status"] = false;
         $reponse["erreur"] = "Parameters required";
         echo json_encode($reponse);
         exit;
     }
-    // recupération de a clé primaire de la table pour la condition de modification
-    $query_primary_key="SHOW KEYS FROM $table_name WHERE Key_name = 'PRIMARY'";
-    $primary_key= $taf_config->get_db()->query($query_primary_key)->fetch()["Column_name"];
-    $condition="where $primary_key=".$params[$primary_key];
+    // condition sur la modification
+    $condition=$table_query->dynamicCondition(json_decode($params["condition"]),'=');
     // execution de la requete de modification
-    $query="delete from $table_name ".$condition;
-    // $reponse["query"]=$query;
+    $query=$table_query->dynamicUpdate(json_decode($params["data"]),$condition);
+    //$reponse["query"]=$query;
     $resultat=$taf_config->get_db()->exec($query);
     if ($resultat) {
         $reponse["status"] = true;
     } else {
         $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur $resultat";
+        $reponse["erreur"] = "Erreur! ou pas de moification";
     }
     echo json_encode($reponse);
 } catch (\Throwable $th) {
