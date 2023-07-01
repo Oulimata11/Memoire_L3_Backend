@@ -35,7 +35,7 @@ try {
         $reponse["status"] = true;
     } else {
         $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur! ou pas de moification";
+        $reponse["erreur"] = "Erreur! ou pas de modification";
     }
     echo json_encode($reponse);
 } catch (\Throwable $th) {
