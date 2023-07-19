@@ -32,7 +32,7 @@ try {
     // $primary_key= $taf_config->get_db()->query($query_primary_key)->fetch()["Column_name"];
     // $condition="where $primary_key=".$params[$primary_key];
     // // execution de la requete de modification
-    $id=$params=["id"]
+    $id=$params["id"];
     $query="delete from $table_name where id_gardien_note= $id";
     // $reponse["query"]=$query;
     $resultat=$taf_config->get_db()->exec($query);

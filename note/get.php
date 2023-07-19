@@ -21,9 +21,9 @@ try {
     
     $table_query=new TableQuery($table_name);
 
-    $condition=$table_query->dynamicCondition($params,"=");
+    // $condition=$table_query->dynamicCondition($params,"=");
     // $reponse["condition"]=$condition;
-    $query="select *from $table_name ".$condition;
+    $query="select * from note n join gardien g on n.id_gardien=g.id_gardien";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 
