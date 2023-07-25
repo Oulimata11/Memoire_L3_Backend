@@ -38,7 +38,7 @@ try {
             $image = $result->fetch(PDO::FETCH_ASSOC);
             $image_gardien = $image['image_gardien'];
         }
-        $query = "update  gardien set nom_gardien='$nom_gardien',
+        $query = "UPDATE   gardien set nom_gardien='$nom_gardien',
         prenom_gardien = '$prenom_gardien',date_naissance_gardien = '$date_naissance_gardien',
         lieu_naissance_gardien='$lieu_naissance_gardien',date_insertion_gardien='$date_insertion_gardien',
         telephone_gardien='$telephone_gardien',email_gardien='$email_gardien',
