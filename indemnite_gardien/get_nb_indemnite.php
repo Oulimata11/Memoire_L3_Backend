@@ -13,21 +13,18 @@ try {
         contient tous les parametres envoyés par la methode POST
      */
     // toutes les actions nécéssitent une authentification
-    $auth_reponse=$taf_auth->check_auth();
-    if ($auth_reponse["status"] == false && count($params)==0) {
-        echo json_encode($auth_reponse);
-        die;
-    }
+    // $auth_reponse=$taf_auth->check_auth();
+    // if ($auth_reponse["status"] == false && count($params)==0) {
+    //     echo json_encode($auth_reponse);
+    //     die;
+    // }
     
     $table_query=new TableQuery($table_name);
 
-    $condition=$table_query->dynamicCondition($params,"=");
+    // $condition=$table_query->dynamicCondition($params,"=");
     // $reponse["condition"]=$condition;
-    $query="SELECT g.*,
-    (SELECT MAX(note) FROM note n WHERE n.id_gardien = g.id_gardien) AS derniere_note,
-    (SELECT COUNT(id_absence) FROM absence a WHERE a.id_gardien = g.id_gardien) AS nombre_absence,
-    (SELECT MAX(date_debut_conges) FROM conges c WHERE c.id_gardien = g.id_gardien) AS derniere_date_conge
-FROM gardien g; ";
+    $id_gardien=$params["id_gardien"];
+    $query="SELECT ig.*, COUNT(id_i_g) as nombre_indemnite from indemnite_gardien ig where ig.id_gardien= $id_gardien";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 
