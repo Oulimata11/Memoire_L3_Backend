@@ -47,7 +47,7 @@ try {
         if (isset($_FILES['image_utilisateur']) && !empty($_FILES['image_utilisateur']['name'])) {
             $image_utilisateur= $_FILES['image_utilisateur']['name'];
             $image_utilisateur_tmp = $_FILES['image_utilisateur']['tmp_name'];
-            $image_utilisateur_dir = "images/";
+            $image_utilisateur_dir = "../images/";
             move_uploaded_file($image_utilisateur_tmp, $image_utilisateur_dir . $image_utilisateur);
         } else {
             $image_utilisateur= 'profil.png';

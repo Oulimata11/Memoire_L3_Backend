@@ -18,37 +18,44 @@ try {
         $params
         contient tous les parametres envoyés par la methode POST
      */
+ 
+    $id_utilisateur=addslashes($_POST["id_utilisateur"]);
+    $nom_utilisateur =addslashes( $_POST["nom_utilisateur"]);
+    $prenom_utilisateur = addslashes($_POST["prenom_utilisateur"]);
+    $date_naissance_utilisateur =addslashes( $_POST["date_naissance_utilisateur"]);
+    $lieu_naissance_utilisateur =addslashes( $_POST["lieu_naissance_utilisateur"]);
+    $telephone_utilisateur = addslashes($_POST["telephone_utilisateur"]);
+    if(!empty($id_utilisateur)){
+        if (isset($_FILES['image_utilisateur']) && !empty($_FILES['image_utilisateur']['name'])) {
+            $image_utilisateur = $_FILES["image_utilisateur"]["name"];
+            $image_utilisateur_tmp = $_FILES["image_utilisateur"]["tmp_name"];
+            $image_utilisateur_dir = "../images/";
+            move_uploaded_file($image_utilisateur_tmp, $image_utilisateur_dir . $image_utilisateur);
+        } else {
+            $image_query = "SELECT image_utilisateur FROM utilisateur WHERE id_utilisateur = '$id_utilisateur'";
+            $result = $taf_config->get_db()->query($image_query);
+            $image = $result->fetch(PDO::FETCH_ASSOC);
+            $image_utilisateur = $image['image_utilisateur'];
+        }
+        $query = "update  utilisateur set nom_utilisateur='$nom_utilisateur',
+        prenom_utilisateur = '$prenom_utilisateur',date_naissance_utilisateur = '$date_naissance_utilisateur',
+        lieu_naissance_utilisateur='$lieu_naissance_utilisateur',telephone_utilisateur='$telephone_utilisateur',
+         image_utilisateur = '$image_utilisateur' where id_utilisateur=$id_utilisateur";
 
-    if(empty($params)){
-        $reponse["status"] = false;
-        $reponse["erreur"] = "Parameters required";
+        if ($taf_config->get_db()->exec($query)) {
+            $reponse["status"] = true;
+            $params["id"] = $taf_config->get_db()->lastInsertId();
+            $_POST["image_utilisateur"] = $image_utilisateur;
+            $reponse["data"] = $_POST;
+        } else {
+            $reponse["status"] = false;
+            $reponse["erreur"] = "Erreur d'insertion à la base de ";
+        }
         echo json_encode($reponse);
-        exit;
-    }
-    // // condition sur la modification
-    // $condition=$table_query->dynamicCondition(json_decode($params["condition"]),'=');
-    // // execution de la requete de modification
-    // $query=$table_query->dynamicUpdate(json_decode($params["data"]),$condition);
-    //$reponse["query"]=$query;
-    $id_utilisateur=$params["id_utilisateur"];
-    $nom_utilisateur = $params["nom_utilisateur"];
-    $prenom_utilisateur = $params["prenom_utilisateur"];
-    $date_naissance_utilisateur= $params["date_naissance_utilisateur"];
-    $lieu_naissance_utilisateur =$params["lieu_naissance_utilisateur"];
-    $date_insertion_utilisateur =$params["date_insertion_utilisateur"];
-    $telephone_utilisateur =$params["telephone_utilisateur"];
-    $query="UPDATE utilisateur set nom_utilisateur=$nom_utilisateur, prenom_utilisateur=$prenom_utilisateur,
-    date_naissance_utilisateur = $date_naissance_utilisateur, lieu_naissance_utilisateur=$lieu_naissance_utilisateur,
-    date_insertion_utilisateur=$date_insertion_utilisateur,telephone_utilisateur=$telephone_utilisateur
-    where id_utilisateur=$id_utilisateur ";
-    $resultat=$taf_config->get_db()->exec($query);
-    if ($resultat) {
-        $reponse["status"] = true;
+
     } else {
-        $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur! ou pas de moification";
+        echo json_encode(["status"=>false,"message"=>"donnees manquant!!"]);
     }
-    echo json_encode($reponse);
 } catch (\Throwable $th) {
     
     $reponse["status"] = false;
