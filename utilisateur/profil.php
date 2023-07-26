@@ -22,8 +22,9 @@ try {
     $table_query=new TableQuery($table_name);
 
     // $condition=$table_query->dynamicCondition($params,"=");
-    // $reponse["condition"]=$condition;
-    $query="select * from note n join gardien g on n.id_gardien=g.id_gardien";
+    // // $reponse["condition"]=$condition;
+    $id_utilisateur= $params["id_utilisateur"];
+    $query="select *from utilisateur u, role r where u.id_role=r.id_role and id_utilisateur=$id_utilisateur";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 

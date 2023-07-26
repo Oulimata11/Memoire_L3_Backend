@@ -23,7 +23,8 @@ try {
 
     $condition=$table_query->dynamicCondition($params,"=");
     // $reponse["condition"]=$condition;
-    $query="select *from $table_name ".$condition;
+    $query="select *from gardien g join indemnite_gardien ig on g.id_gardien=ig.id_gardien
+    join indemnite i on i.id_indemnite =ig.id_indemnite";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 

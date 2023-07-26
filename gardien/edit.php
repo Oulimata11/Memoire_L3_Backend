@@ -18,26 +18,46 @@ try {
         $params
         contient tous les parametres envoyés par la methode POST
      */
+    $id_gardien= addslashes($_POST['id_gardien']);
+     $nom_gardien= addslashes($_POST['nom_gardien']);
+     $prenom_gardien= addslashes($_POST['prenom_gardien']);
+     $date_naissance_gardien= addslashes($_POST['date_naissance_gardien']);
+     $lieu_naissance_gardien= addslashes($_POST['lieu_naissance_gardien']);
+     $date_insertion_gardien= addslashes($_POST['date_insertion_gardien']);
+     $telephone_gardien= addslashes($_POST['telephone_gardien']);
+     $email_gardien = addslashes($_POST['email_gardien']);
+    if(!empty($id_gardien)){
+        if (isset($_FILES['image_gardien']) && !empty($_FILES['image_gardien']['name'])) {
+            $image_gardien = $_FILES["image_gardien"]["name"];
+            $image_gardien_tmp = $_FILES["image_gardien"]["tmp_name"];
+            $image_gardien_dir = "../images/";
+            move_uploaded_file($image_gardien_tmp, $image_gardien_dir . $image_gardien);
+        } else {
+            $image_query = "SELECT image_gardien FROM gardien WHERE id_gardien = '$id_gardien'";
+            $result = $taf_config->get_db()->query($image_query);
+            $image = $result->fetch(PDO::FETCH_ASSOC);
+            $image_gardien = $image['image_gardien'];
+        }
+        $query = "UPDATE   gardien set nom_gardien='$nom_gardien',
+        prenom_gardien = '$prenom_gardien',date_naissance_gardien = '$date_naissance_gardien',
+        lieu_naissance_gardien='$lieu_naissance_gardien',date_insertion_gardien='$date_insertion_gardien',
+        telephone_gardien='$telephone_gardien',email_gardien='$email_gardien',
+         image_gardien = '$image_gardien' where id_gardien=$id_gardien";
 
-    if(empty($params)){
-        $reponse["status"] = false;
-        $reponse["erreur"] = "Parameters required";
+        if ($taf_config->get_db()->exec($query)) {
+            $reponse["status"] = true;
+            $params["id"] = $taf_config->get_db()->lastInsertId();
+            $_POST["image_gardien"] = $image_gardien;
+            $reponse["data"] = $_POST;
+        } else {
+            $reponse["status"] = false;
+            $reponse["erreur"] = "Erreur d'insertion à la base de ";
+        }
         echo json_encode($reponse);
-        exit;
-    }
-    // condition sur la modification
-    $condition=$table_query->dynamicCondition(json_decode($params["condition"]),'=');
-    // execution de la requete de modification
-    $query=$table_query->dynamicUpdate(json_decode($params["data"]),$condition);
-    //$reponse["query"]=$query;
-    $resultat=$taf_config->get_db()->exec($query);
-    if ($resultat) {
-        $reponse["status"] = true;
+
     } else {
-        $reponse["status"] = false;
-        $reponse["erreur"] = "Erreur! ou pas de moification";
+        echo json_encode(["status"=>false,"message"=>"donnees manquant!!"]);
     }
-    echo json_encode($reponse);
 } catch (\Throwable $th) {
     
     $reponse["status"] = false;

@@ -11,19 +11,20 @@ try {
     /* 
         $params
         contient tous les parametres envoyés par la methode POST
+     */
     // toutes les actions nécéssitent une authentification
     $auth_reponse=$taf_auth->check_auth();
     if ($auth_reponse["status"] == false && count($params)==0) {
         echo json_encode($auth_reponse);
         die;
-     
     }
     
     $table_query=new TableQuery($table_name);
 
-    $condition=$table_query->dynamicCondition($params,"=");
-    // $reponse["condition"]=$condition; */
-    $query="select email_utilisateur from $table_name ".$condition;
+    //$condition=$table_query->dynamicCondition($params,"=");
+    // $reponse["condition"]=$condition;
+    $id_gardien=$params["id_gardien"];
+    $query="UPDATE gardien set statut_gardien=0 where id_gardien=$id_gardien ";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 

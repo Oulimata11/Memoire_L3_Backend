@@ -13,17 +13,18 @@ try {
         contient tous les parametres envoyés par la methode POST
      */
     // toutes les actions nécéssitent une authentification
-    $auth_reponse=$taf_auth->check_auth();
-    if ($auth_reponse["status"] == false && count($params)==0) {
-        echo json_encode($auth_reponse);
-        die;
-    }
+    // $auth_reponse=$taf_auth->check_auth();
+    // if ($auth_reponse["status"] == false && count($params)==0) {
+    //     echo json_encode($auth_reponse);
+    //     die;
+    // }
     
     $table_query=new TableQuery($table_name);
 
     // $condition=$table_query->dynamicCondition($params,"=");
     // $reponse["condition"]=$condition;
-    $query="select * from note n join gardien g on n.id_gardien=g.id_gardien";
+    $id=$params["id"];
+    $query="select * from $table_name where id_gardien= $id";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 

@@ -21,9 +21,10 @@ try {
     
     $table_query=new TableQuery($table_name);
 
-    // $condition=$table_query->dynamicCondition($params,"=");
+    //$condition=$table_query->dynamicCondition($params,"=");
     // $reponse["condition"]=$condition;
-    $query="select * from note n join gardien g on n.id_gardien=g.id_gardien";
+    $id_utilisateur=$params["id_utilisateur"];
+    $query="UPDATE utilisateur set statut_utilisateur=1 where id_utilisateur=$id_utilisateur ";
     $reponse["data"] = $taf_config->get_db()->query($query)->fetchAll(PDO::FETCH_ASSOC);
     $reponse["status"] = true;
 

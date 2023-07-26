@@ -15,7 +15,7 @@ class TafAuth
     public $expire = null;
     public $serverName = "your.domain.name";
 
-    private $time_to_expire = 120;
+    private $time_to_expire = 2400;
 
     public function __construct()
     {
