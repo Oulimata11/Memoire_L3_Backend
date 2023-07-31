@@ -30,7 +30,7 @@ try {
     $login=addslashes($params["login"]);
     $pwd=addslashes($params["pwd"]);
 
-    $query = "select * from utilisateur u,role r where u.id_role=r.id_role and email_utilisateur='$login' and password_utilisateur=md5('$pwd') ";
+    $query = "select * from utilisateur u,role r where u.id_role=r.id_role and email_utilisateur='$login' and password_utilisateur=md5('$pwd') and statut_utilisateur=1 ";
     $resultat = $taf_config->get_db()->query($query)->fetch(PDO::FETCH_ASSOC);
     if ($resultat) {
         $reponse["status"] = true;
